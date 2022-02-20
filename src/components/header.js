@@ -17,8 +17,8 @@ import PropTypes from 'prop-types';
 import profilePic from "../assets/images/profile.jpg";
 import { Link } from "react-router-dom";
 
-const pages = ['Home', 'Track Delivery', 'All Requests', 'Manage Users'];
-const pageRouteLinks = ['/home', '/track-Delivery', '/all-requests', '/manage-users'];
+const pages = ['Home', 'Track Delivery', 'All Requests', 'Manage Branch', 'Manage Users', 'View History'];
+const pageRouteLinks = ['/home', '/track-Delivery', '/all-requests', '/manage-branch', '/manage-users', '/viewHistory'];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
