@@ -6,8 +6,6 @@ import Typography from '@mui/material/Typography';
 import { Container, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import SwipeableViews from 'react-swipeable-views';
-import { autoPlay } from 'react-swipeable-views-utils';
 
 import SvgIcon from '@mui/material/SvgIcon';
 import Icon from '@mui/material/Icon';
