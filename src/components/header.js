@@ -51,7 +51,7 @@ class Header extends Component {
 
     render() {
         return (
-            <AppBar position="static">
+            <AppBar position="fixed">
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <Typography
