@@ -14,12 +14,13 @@ function createData(branchID, city, district, telephone) {
 }
 
 const rows = [
-  createData(1, "Dematagoda", "Colombo", "077-1234567"),
-  createData(2, "Hatton", "Nuwara Eliya", "054-1234567"),
-  createData(3, "Ginigathhena", "Nuwara Eliya", "081-1234567"),
-  createData(4, "Hiripitiya", "Kurunegala", "076-1234567"),
-  createData(5, "Peradeniya", "Kandy", "037-1234567"),
+  createData(2, "Peradeniya", "Kandy", "075 820 4216"),
+  createData(3, "Hatton", "Nuwara Eliya", "054-1234567"),
+  createData(4, "Dehiwela", "Colombo", "075 820 4216"),
 ];
+
+const pages = ['Add Branch', 'Manage Branch'];
+const pageRouteLinks = ['/addBranch', '/manage-branch'];
 
 class ManageBranch extends Component {
 
@@ -27,7 +28,7 @@ class ManageBranch extends Component {
     return (
       <>
         <div><br />
-          <Typography style={{ marginLeft: '20px' }} variant="h4" gutterBottom component="div">
+          <Typography style={{ marginLeft: '20px', marginTop: '75px', marginBottom: '25px' }} variant="h4" gutterBottom component="div">
             Branch Management
           </Typography>
         </div>
@@ -115,5 +116,5 @@ const Wrap = styled.div`
         &:hover {
           background: #b86dff;
         }
-        
+
     }`

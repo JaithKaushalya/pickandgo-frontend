@@ -8,30 +8,21 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
+import { Container, Grid, Card, CardContent, Button, TextField , Divider} from '@mui/material';
+import Box from '@mui/material/Box';
 
-function createData(branchID, city, district, telephone) {
-  return { branchID, city, district, telephone };
-}
-
-const rows = [
-  createData(1, "Dematagoda", "Colombo", "077-1234567"),
-  createData(2, "Hatton", "Nuwara Eliya", "054-1234567"),
-  createData(3, "Ginigathhena", "Nuwara Eliya", "081-1234567"),
-  createData(4, "Hiripitiya", "Kurunegala", "076-1234567"),
-  createData(5, "Peradeniya", "Kandy", "037-1234567"),
-];
-
-class addBranch extends Component {
+class AddBranch extends Component {
 
   render() {
     return (
-      <>
+     <>
+        <div>
         <div><br />
-          <Typography style={{ marginLeft: '20px' }} variant="h4" gutterBottom component="div">
+          <Typography style={{ marginLeft: '20px', marginTop: '75px', marginBottom: '25px' }} variant="h4" gutterBottom component="div">
             Branch Management
           </Typography>
         </div>
-        <Container>
+        <Form>
           <Wrap>
             <div>
               <a style={{ textDecoration: 'none', color: 'white' }} href="#">Manage Branch</a>
@@ -42,52 +33,79 @@ class addBranch extends Component {
               <a style={{ textDecoration: 'none', color: 'white' }} href="#">Add Branch</a>
             </div>
           </Wrap>
-        </Container>
+        </Form>
         <div><br />
           <Typography style={{ fontWeight: '900' }} align="center" variant="h4" gutterBottom component="div">
-            Manage Branch
+            Add Branch
           </Typography>
         </div>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Branch ID</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Name</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">District</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Telephone</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell align="center">{row.branchID}</TableCell>
-                  <TableCell align="center">{row.city}</TableCell>
-                  <TableCell align="center">{row.district}</TableCell>
-                  <TableCell align="center">{row.telephone}</TableCell>
-                  <TableCell align="center">
-                    <div>
-                      <a style={{ textDecoration: 'none', color: 'Black', width: '80px', borderRadius: '10px', backgroundColor: '#dc3545', padding: '10px', paddingLeft: '30px', paddingRight: '30px' }} align="center" href="#">Delete</a>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </>
+            <Container><br /><br />
+                <Card>
+                    <CardContent>
+                        <Grid container spacing={4}>
+                            <Grid item xs={6}>
+                                <Box
+                                    component="form"
+                                    sx={{
+                                        '& .MuiTextField-root': { m: 2, width: '100ch' },
+                                    }}
+                                    noValidate
+                                    autoComplete="off"
+                                    
+                                >
+                                    <br/><br/>
+
+                                    <div>
+                                      <label>Name</label>
+                                        <TextField
+                                            required
+                                            id="outlined-required"
+                                            label="Name"
+                                            defaultValue=""
+                                        />
+                                        <label>District</label>
+                                        <TextField
+                                            required
+                                            id="outlined-required"
+                                            label="District"
+                                            defaultValue=""
+                                        />
+                                        <label>Telephone</label>
+                                        <TextField
+                                            required
+                                            id="outlined-required"
+                                            label="Telephone"
+                                            defaultValue=""
+                                        />
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <Button variant="contained" color="info" sx={{ mr: 4 }}>Add Branch</Button>
+
+
+                                    </div>
+
+                                </Box>
+
+
+
+                            </Grid>
+                        </Grid>
+
+                    </CardContent>
+                </Card>
+
+
+            </Container>
+        </div>
+     </>
     );
   }
 
 }
 
-export default addBranch;
+export default AddBranch;
 
-const Container = styled.div`
+
+const Form = styled.div`
   display: flex;
   flex-direction: row;
 `
@@ -115,5 +133,5 @@ const Wrap = styled.div`
         &:hover {
           background: #b86dff;
         }
-        
+
     }`

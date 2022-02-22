@@ -27,7 +27,7 @@ class ViewHistory extends Component {
     return (
       <>
         <div><br />
-          <Typography style={{ fontWeight: '900', marginTop: '25px', marginBottom: '25px' }} align="center" variant="h4" gutterBottom component="div">
+          <Typography style={{ fontWeight: '900', marginTop: '100px', marginBottom: '25px' }} align="center" variant="h4" gutterBottom component="div">
             Delivery History
           </Typography>
         </div>
