@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react'
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MobileStepper from '@mui/material/MobileStepper';
@@ -19,6 +19,7 @@ import TopIndicators from './home-components/home-top-indicators';
 import AboutUs from './home-components/home-about-us';
 import MakeRequest from './home-components/home-make-request';
 import OurServices from './home-components/home-our-services';
+import Header from './header';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -42,6 +43,7 @@ const images = [
 ];
 
 function Home() {
+
     const theme = useTheme();
     const [activeStep, setActiveStep] = React.useState(0);
     const maxSteps = images.length;
@@ -59,7 +61,9 @@ function Home() {
     };
 
     return (
-        <div><br/><br/><br/><br/>
+        <div>
+            <Header />
+            <br /><br /><br /><br />
             <Box sx={{ maxWidth: '100%', flexGrow: 1 }}>
                 {/* <Paper
         square
@@ -132,9 +136,9 @@ function Home() {
             </Box>
 
             <TopIndicators />
-            <AboutUs/>
-            <MakeRequest/>
-            <OurServices/>
+            <AboutUs />
+            <MakeRequest />
+            <OurServices />
         </div>
     );
 }
