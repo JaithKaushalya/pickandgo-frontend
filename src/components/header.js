@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,8 +16,8 @@ import PropTypes from 'prop-types';
 
 import profilePic from "../assets/images/profile.jpg";
 
-const pages = ['Home', 'Track Delivery', 'All Requests', 'Manage Branch', 'Add Branch', 'Manage Users', 'View History'];
-const pageRouteLinks = ['/home', '/track-Delivery', '/all-requests', '/manage-branch', '/addBranch', '/manage-users', '/viewHistory'];
+const pages = ['Home', 'Track Delivery', 'All Requests', 'Manage Users', 'Allocation'];
+const pageRouteLinks = ['/home', '/track-Delivery', '/all-requests', '/manage-users', "/allocation"];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -28,9 +28,20 @@ class Header extends Component {
         super(props);
         this.state = {
             anchorElNav: false,
-            anchorElUser: false
+            anchorElUser: false,
+            isAdmin: false
         }
+
+        const session = sessionStorage.getItem("user");
+        if (session != null) {
+            const sessionObj = JSON.parse(session);
+            if (sessionObj.authorities[0].authority === "admin")
+                this.state.isAdmin = true;
+        }
+
+
     }
+
 
     handleOpenNavMenu = (event) => {
         this.setState({ anchorElNav: event.currentTarget });
@@ -50,7 +61,7 @@ class Header extends Component {
 
     handleMakeRequest = () => {
 
-        const token = localStorage.getItem("user");
+        const token = sessionStorage.getItem("user");
         if (!token) {
             window.location.href = "/login";
 
@@ -103,9 +114,13 @@ class Header extends Component {
                                 }}
                             >
                                 {pages.map((page, index) => (
-                                    <MenuItem key={page} onClick={() => this.handleCloseNavMenu(index)}>
-                                        <Typography textAlign="center">{page}</Typography>
-                                    </MenuItem>
+
+                                    page === "Allocation" && !this.state.isAdmin ?
+                                        "" :
+
+                                        <MenuItem key={page} onClick={() => this.handleCloseNavMenu(index)}>
+                                            <Typography textAlign="center">{page}</Typography>
+                                        </MenuItem>
                                 ))}
                             </Menu>
                         </Box>
@@ -119,13 +134,16 @@ class Header extends Component {
                         </Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                             {pages.map((page, index) => (
-                                <Button
-                                    key={page}
-                                    onClick={() => this.handleCloseNavMenu(index)}
-                                    sx={{ my: 2, ml: 2, color: 'white', display: 'block' }}
-                                >
-                                    {page}
-                                </Button>
+
+                                page === "Allocation" && !this.state.isAdmin ?
+                                    "" :
+                                    <Button
+                                        key={page}
+                                        onClick={() => this.handleCloseNavMenu(index)}
+                                        sx={{ my: 2, ml: 2, color: 'white', display: 'block' }}
+                                    >
+                                        {page}
+                                    </Button>
                             ))}
                         </Box>
 
@@ -161,7 +179,7 @@ class Header extends Component {
                         </Box>
                     </Toolbar>
                 </Container>
-            </AppBar>
+            </AppBar >
         );
     }
 }

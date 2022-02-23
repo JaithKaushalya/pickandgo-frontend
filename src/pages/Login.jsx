@@ -23,6 +23,7 @@ const Login = () => {
 
             sessionStorage.setItem("user", JSON.stringify(res.data.userData));
             sessionStorage.setItem("token", res.data.token);
+            window.location.href = "/"
         }
     }
 
