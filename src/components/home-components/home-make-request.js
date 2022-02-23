@@ -3,28 +3,179 @@ import Box from '@mui/material/Box';
 import MobileStepper from '@mui/material/MobileStepper';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { Container, Grid, Card, CardContent, Button, TextField , Divider} from '@mui/material';
+import {
+    Container, Grid, Card, CardContent, Button, TextField, Divider, InputAdornment, IconButton,
+    MenuItem, Select, InputLabel, FormControl,
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-import aboutUs from "../../assets/images/aboutUs.png";
-import makeRequest from "../../assets/images/makeRequest.png";
-
-import SvgIcon from '@mui/material/SvgIcon';
-import Icon from '@mui/material/Icon';
-
+import { DataGrid } from '@mui/x-data-grid';
 
 function MakeRequest() {
+    const [branch, setABranch] = React.useState('');
+    const [open, setOpen] = React.useState(false);
+
+    const handleChange = (event) => {
+        setABranch(event.target.value);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    
+    const [rows, setTableData] = React.useState([]);
+
+    function createData(id, item, quantity, weight) {
+        return { id, item, quantity, weight };
+    }
+
+    const handleTableDeleteClick = (event, cellValue) => {
+        let rowData = Object.assign([], rows);
+        const filteredRows = rowData.filter(singleRow => {
+            return singleRow.id !== cellValue.row.id;
+        });
+        filteredRows.forEach((obj, i) => {
+            obj.id = (i + 1)
+        });
+        setTableData(filteredRows);
+    }
+
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'item', headerName: 'Item', width: 130 },
+        { field: 'quantity', headerName: 'Qty', width: 130 },
+        { field: 'weight', headerName: 'Weight', width: 90 },
+        {
+            field: "delete",
+            headerName: 'Action',
+            renderCell: (cellValues) => {
+                return (
+                    <DeleteIcon
+                        variant="contained"
+                        color="warning"
+                        onClick={(event) => {
+                            handleTableDeleteClick(event, cellValues);
+                        }}
+                    >
+                        Delete
+                    </DeleteIcon>
+                );
+            }
+        }
+    ];
+
+    // addTool dialog ////////////
+    const [openAddItemDialog, setOpenAddItem] = React.useState(false);
+    const [addItemValues, setAddItemValues] = React.useState({
+        Item: "",
+        Qty: 0,
+        Weight: "",
+        Dimensions: "",
+        helperTexts: {
+            helperTextItem: "",
+            helperTextqty: "",
+            helperTextWeight: "",
+            helperTextDimensions: "",
+        },
+        errors: {
+            isErrorItem: false,
+            isErrorWeight: false,
+            isErrorQty: false,
+            isErrorDimenrions: false,
+        }
+    });
+
+    const handleClickOpen = () => {
+        setOpenAddItem(true);
+    };
+
+    const handleCloseAddItem = () => {
+        setOpenAddItem(false);
+        setAddItemValues({
+            ...addItemValues,
+            Item: "",
+            Qty: 0,
+            Weight: "",
+            Dimensions: "",
+            helperTexts: {
+                helperTextItem: "",
+                helperTextqty: "",
+                helperTextWeight: "",
+                helperTextDimensions: "",
+            },
+            errors: {
+                isErrorItem: false,
+                isErrorWeight: false,
+                isErrorQty: false,
+                isErrorDimenrions: false,
+            }
+        });
+    };
+
+    const handleSuccessAddItem = () => {
+        if (addNewItemValidator()) {
+            let rowData = Object.assign([], rows);
+            rowData.push(createData((rows.length + 1), addItemValues.Item, addItemValues.Qty, addItemValues.Weight));
+            setTableData(rowData);
+            handleCloseAddItem();
+        }
+    }
+
+    const handleTextChange = (event) => {
+        setAddItemValues({
+            ...addItemValues,
+            [event.target.name]: event.target.value,
+        });
+    }
+
+    const addNewItemValidator = () => {
+        var isValid = true;
+        var helperTexts = {};
+        var errors = {};
+        if (addItemValues.Item == "") {
+            isValid = false;
+            helperTexts.helperTextItem = "This is required";
+            errors.isErrorItem = true;
+        }
+        if (addItemValues.Weight == "") {
+            isValid = false;
+            helperTexts.helperTextWeight = "This is required";
+            errors.isErrorWeight = true;
+        }
+        if (addItemValues.Qty <= 0) {
+            isValid = false;
+            helperTexts.helperTextQty = "This is required";
+            errors.isErrorQty = true;
+        }
+        if (addItemValues.Dimensions == "") {
+            isValid = false;
+            helperTexts.helperTextDimensions = "This is required";
+            errors.isErrorDimensions = true;
+        }
+        setAddItemValues({
+            ...addItemValues,
+            helperTexts: helperTexts,
+            errors: errors
+        });
+        return isValid;
+    }
+    //////////////////////////////
 
     return (
         <div>
             <Container><br /><br /><br /><br /><br /><br />
-
                 <Card>
                     <CardContent>
-
                         <Grid container spacing={4}>
-
                             <Grid item xs={12}>
-
                                 <Typography variant="h6" gutterBottom component="div">
                                     Make Your request Now.
                                 </Typography>
@@ -34,9 +185,6 @@ function MakeRequest() {
                             </Grid>
 
                             <Grid item xs={6}>
-
-
-
                                 <Box
                                     component="form"
                                     sx={{
@@ -53,37 +201,26 @@ function MakeRequest() {
                                         <TextField
                                             required
                                             id="outlined-required"
-                                            label="TItle"
+                                            label="First Name"
                                             defaultValue=""
+                                            size="small"
                                         />
                                         <TextField
                                             required
                                             id="outlined-required"
-                                            label="Full Name"
+                                            label="Last Name"
                                             defaultValue=""
-                                        />
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="Pick up location"
-                                            defaultValue=""
+                                            size="small"
                                         />
                                         <TextField
                                             required
                                             id="outlined-required"
                                             label="Mobile No"
                                             defaultValue=""
-                                        />
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="Nearest Branch"
-                                            defaultValue=""
+                                            size="small"
                                         />
                                     </div>
-
-                                    <br/><br/>
-
+                                    <br /><br />
                                     <div>
                                         <Typography variant="body2" gutterBottom>
                                             &nbsp;&nbsp;&nbsp;&nbsp;Enter Reciever Details here.<br />
@@ -92,31 +229,81 @@ function MakeRequest() {
                                         <TextField
                                             required
                                             id="outlined-required"
-                                            label="Title"
+                                            label="First Name"
                                             defaultValue=""
+                                            size="small"
                                         />
                                         <TextField
                                             required
                                             id="outlined-required"
-                                            label="Full Name"
+                                            label="Last Name"
                                             defaultValue=""
-                                        />
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="Drop Off location"
-                                            defaultValue=""
+                                            size="small"
                                         />
                                         <TextField
                                             required
                                             id="outlined-required"
                                             label="Mobile No"
                                             defaultValue=""
+                                            size="small"
                                         />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Button variant="contained" color="info" sx={{ mr: 4 }}>Make Request</Button>
+                                    </div>
+                                    <br /><br />
+                                    <div>
+                                        <Typography variant="body2" gutterBottom>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;Enter Location Details here.<br />
+                                        </Typography>
+                                        <Divider variant="middle" />
+                                        <TextField
+                                            required
+                                            id="outlined-required"
+                                            label="Pick up location"
+                                            defaultValue=""
+                                            size="small"
+                                            InputProps={{
+                                                endAdornment: <InputAdornment position="start">
+                                                    <IconButton type="submit" sx={{ p: '5px', marginRight: "-15px" }} aria-label="search">
+                                                        <SearchIcon />
+                                                    </IconButton>
+                                                </InputAdornment>,
+                                            }}
+                                        />
+                                        <TextField
+                                            required
+                                            id="outlined-required"
+                                            label="Drop off location"
+                                            defaultValue=""
+                                            size="small"
+                                            InputProps={{
+                                                endAdornment: <InputAdornment position="start">
+                                                    <IconButton type="submit" sx={{ p: '5px', marginRight: "-15px" }} aria-label="search">
+                                                        <SearchIcon />
+                                                    </IconButton>
+                                                </InputAdornment>,
+                                            }}
+                                        />
 
-
+                                        <FormControl sx={{ m: 2, width: "30ch" }}>
+                                            <InputLabel id="demo-controlled-open-select-label">Nearest Branch</InputLabel>
+                                            <Select
+                                                labelId="demo-controlled-open-select-label"
+                                                id="demo-controlled-open-select"
+                                                open={open}
+                                                onClose={handleClose}
+                                                onOpen={handleOpen}
+                                                value={branch}
+                                                label="Nearest Branch"
+                                                onChange={handleChange}
+                                                size="small"
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={10}>Matara</MenuItem>
+                                                <MenuItem value={20}>Galle</MenuItem>
+                                                <MenuItem value={30}>Colombo</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </div>
 
                                 </Box>
@@ -125,27 +312,117 @@ function MakeRequest() {
 
                             </Grid>
                             <Grid item xs={6}>
-                                <Box
-                                    component="img"
-                                    sx={{
-                                        height: 400,
-                                        display: 'block',
-                                        //   maxWidth: '1500',
-                                        overflow: 'hidden',
-                                        width: '100%',
-                                    }}
-                                    src={makeRequest}
-                                    alt={"aboutUs"}
+                                <Typography variant="body2" gutterBottom>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;Enter Item Details here.<br />
+                                </Typography>
+                                <Divider variant="middle" /><br />
+                                <Button variant="contained" startIcon={<AddCircleIcon />} color="info"
+                                    sx={{ mr: 4, mb: 3 }} onClick={handleClickOpen}>Add Item</Button>
+
+                                <DataGrid
+                                    rows={rows}
+                                    columns={columns}
+                                    pageSize={5}
+                                    rowsPerPageOptions={[5]}
+                                    // checkboxSelection
+                                    sx={{ height: 370 }}
                                 />
+                                <br /><br />
+                                <Button variant="contained" color="success" sx={{ mr: 1, mb: 3 }}>Reset</Button>
+                                <Button variant="contained" color="info" sx={{ mr: 1, mb: 3 }}>Make Request</Button>
                             </Grid>
 
                         </Grid>
 
                     </CardContent>
                 </Card>
-
-
             </Container>
+
+
+            <Dialog open={openAddItemDialog} onClose={handleCloseAddItem}>
+                <DialogTitle>Add new Item</DialogTitle>
+                <DialogContent>
+                    <Divider variant="middle" /><br />
+                    <DialogContentText>
+                        &nbsp;&nbsp;&nbsp;&nbsp;please enter follwoing details to add new Item to be delivered.
+                    </DialogContentText>
+                    <br />
+                    <Box
+                        component="form"
+                        sx={{
+                            '& .MuiTextField-root': { m: 1, width: '20ch' },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <div>
+                            <TextField
+                                error={addItemValues.errors.isErrorItem}
+                                required
+                                id="outlined-required"
+                                label="Item"
+                                defaultValue=""
+                                size="small"
+                                name="Item"
+                                onChange={handleTextChange}
+                                helperText={addItemValues.helperTexts.helperTextItem}
+                            />
+                            <TextField
+                                error={addItemValues.errors.isErrorWeight}
+                                required
+                                id="outlined-required"
+                                label="Weight"
+                                defaultValue=""
+                                onChange={handleTextChange}
+                                helperText={addItemValues.helperTexts.helperTextWeight}
+                                size="small"
+                                name="Weight"
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="start">
+                                        Kg
+                                    </InputAdornment>,
+                                }}
+                            />
+                            <TextField
+                                error={addItemValues.errors.isErrorQty}
+                                required
+                                id="outlined-required"
+                                label="Quantity"
+                                defaultValue=""
+                                size="small"
+                                type="number"
+                                name="Qty"
+                                onChange={handleTextChange}
+                                helperText={addItemValues.helperTexts.helperTextQty}
+                            />
+                        </div>
+                    </Box>
+                    <Box
+                        component="form"
+                        sx={{
+                            '& .MuiTextField-root': { m: 1, width: '97%', marginRight: "-30px" },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <TextField
+                            error={addItemValues.errors.isErrorDimensions}
+                            placeholder="Dimmensions"
+                            multiline
+                            rows={2}
+                            maxRows={5}
+                            name="Dimensions"
+                            onChange={handleTextChange}
+                            helperText={addItemValues.helperTexts.helperTextDimensions}
+                        />
+                    </Box>
+
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAddItem}>Cancel</Button>
+                    <Button onClick={handleSuccessAddItem}>Add Item</Button>
+                </DialogActions>
+            </Dialog>
         </div>
 
     );
