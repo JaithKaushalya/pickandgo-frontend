@@ -19,6 +19,7 @@ import TopIndicators from './home-components/home-top-indicators';
 import AboutUs from './home-components/home-about-us';
 import MakeRequest from './home-components/home-make-request';
 import OurServices from './home-components/home-our-services';
+import Header from './header';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -59,7 +60,9 @@ function Home() {
     };
 
     return (
-        <div><br/><br/><br/><br/>
+        <div>
+            <Header />
+            <br /><br /><br /><br />
             <Box sx={{ maxWidth: '100%', flexGrow: 1 }}>
                 {/* <Paper
         square
@@ -132,9 +135,9 @@ function Home() {
             </Box>
 
             <TopIndicators />
-            <AboutUs/>
-            <MakeRequest/>
-            <OurServices/>
+            <AboutUs />
+            <MakeRequest />
+            <OurServices />
         </div>
     );
 }
