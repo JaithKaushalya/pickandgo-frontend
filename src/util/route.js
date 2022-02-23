@@ -7,6 +7,8 @@ import ManageBranch from '../components/manage-branch';
 import AddBranch from '../components/addBranch';
 import ViewHistory from '../components/viewHistory';
 import AllRequests from '../components/all-requests';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
 
 class AppRoute extends Component {
 
@@ -16,6 +18,8 @@ class AppRoute extends Component {
                 <Switch>
                     <Route exact path="/"><Home /></Route>
                     <Route exact path="/home"><Home /></Route>
+                    <Route exact path="/login"><Login /></Route>
+                    <Route exact path="/register"><Register /></Route>
                     <Route exact path="/track-delivery"><TrackDelivery /></Route>
                     <Route exact path="/manage-branch"><ManageBranch /></Route>
                     <Route exact path="/addBranch"><AddBranch /></Route>
