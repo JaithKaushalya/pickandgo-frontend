@@ -8,9 +8,9 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-          <Header />
-          <Main />
-        </div>
+
+        <Main />
+      </div>
     </ThemeProvider>
   );
 }
