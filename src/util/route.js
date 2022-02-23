@@ -6,6 +6,7 @@ import ManageUsers from '../components/manage-users';
 import AllRequests from '../components/all-requests';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import Allocation from '../pages/Allocation';
 
 class AppRoute extends Component {
 
@@ -20,6 +21,7 @@ class AppRoute extends Component {
                     <Route exact path="/track-delivery"><TrackDelivery /></Route>
                     <Route exact path="/manage-users"><ManageUsers /></Route>
                     <Route exact path="/all-requests"><AllRequests /></Route>
+                    <Route exact path="/allocation"><Allocation /></Route>
                 </Switch>
             </Router>
         )
