@@ -91,7 +91,7 @@ function Home() {
                                 <Box
                                     component="img"
                                     sx={{
-                                        height: 630,
+                                        height: '85vh',
                                         display: 'block',
                                         //   maxWidth: '1500',
                                         overflow: 'hidden',
