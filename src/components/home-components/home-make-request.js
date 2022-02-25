@@ -16,21 +16,21 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { DataGrid } from '@mui/x-data-grid';
 
 function MakeRequest() {
-    const [branch, setABranch] = React.useState('');
-    const [open, setOpen] = React.useState(false);
+    // const [branch, setABranch] = React.useState('');
+    // const [open, setOpen] = React.useState(false);
 
-    const handleChange = (event) => {
-        setABranch(event.target.value);
-    };
+    // const handleChange = (event) => {
+    //     setABranch(event.target.value);
+    // };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    // const handleClose = () => {
+    //     setOpen(false);
+    // };
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    
+    // const handleOpen = () => {
+    //     setOpen(true);
+    // };
+
     const [rows, setTableData] = React.useState([]);
 
     function createData(id, item, quantity, weight) {
@@ -167,7 +167,136 @@ function MakeRequest() {
         });
         return isValid;
     }
+
+    //  confirm dialog box
+    const [openConfirmDialog, setOpenConfirmDialog] = React.useState(false);
+    const handleConfirmClose = () => {
+        setOpenConfirmDialog(false);
+    }
+
     //////////////////////////////
+    const [mainValues, setMainValues] = React.useState({
+        SFName: "",
+        SLName: "",
+        SMobile: "",
+        RFName: "",
+        RLName: "",
+        RMobile: "",
+        PickUp: "",
+        DropOff: "",
+        NbPickUp: "",
+        NbDropOff: "",
+        helperTexts: {
+            helperTextSFName: "",
+            helperTextSLName: "",
+            helperTextSMobile: "",
+            helperTextRFName: "",
+            helperTextRLName: "",
+            helperTextRMobile: "",
+            helperTextPickUp: "",
+            helperTextDropOff: "",
+            helperTextNbPickUp: "",
+            helperTextNbDropOff: "",
+            helperTextTable: ""
+        },
+        errors: {
+            isErrorSFName: false,
+            isErrorSLName: false,
+            isErrorSMobile: false,
+            isErrorRFName: false,
+            isErrorRLName: false,
+            isErrorRMobile: false,
+            isErrorPickUp: false,
+            isErrorDropOff: false,
+            isErrorNbPickUp: false,
+            isErrorNbDropOff: false,
+        }
+    });
+
+    const handleMainTextChange = (event) => {
+        setMainValues({
+            ...mainValues,
+            [event.target.name]: event.target.value,
+        });
+    }
+
+    const handleMakeRequest = () => {
+        if (addMainFrameValidator()) {
+            setOpenConfirmDialog(true);
+        }
+    }
+
+    const completeMakeRequest = () => {
+
+        // CREATE BACK END CALL HERE    
+     }
+
+    const addMainFrameValidator = () => {
+        var isValid = true;
+        var helperTexts = {};
+        var errors = {};
+        if (mainValues.SFName == "") {
+            isValid = false;
+            helperTexts.helperTextSFName = "This is required";
+            errors.isErrorSFName = true;
+        }
+        if (mainValues.SLName == "") {
+            isValid = false;
+            helperTexts.helperTextSLName = "This is required";
+            errors.isErrorSLName = true;
+        }
+        if (mainValues.SMobile == "") {
+            isValid = false;
+            helperTexts.helperTextSMobile = "This is required";
+            errors.isErrorSMobile = true;
+        }
+        if (mainValues.RFName == "") {
+            isValid = false;
+            helperTexts.helperTextRFName = "This is required";
+            errors.isErrorRFName = true;
+        }
+        if (mainValues.RLName == "") {
+            isValid = false;
+            helperTexts.helperTextRLName = "This is required";
+            errors.isErrorRLName = true;
+        }
+        if (mainValues.RMobile == "") {
+            isValid = false;
+            helperTexts.helperTextRMobile = "This is required";
+            errors.isErrorRMobile = true;
+        }
+        if (mainValues.PickUp == "") {
+            isValid = false;
+            helperTexts.helperTextPickUp = "This is required";
+            errors.isErrorPickUp = true;
+        }
+        if (mainValues.DropOff == "") {
+            isValid = false;
+            helperTexts.helperTextDropOff = "This is required";
+            errors.isErrorDropOff = true;
+        }
+        if (mainValues.NbPickUp == "") {
+            isValid = false;
+            helperTexts.helperTextNbPickUp = "This is required";
+            errors.isErrorNbPickUp = true;
+        }
+        if (mainValues.NbDropOff == "") {
+            isValid = false;
+            helperTexts.helperTextNbDropOff = "This is required";
+            errors.isErrorNbDropOff = true;
+        }
+        if (rows.length == 0) {
+            isValid = false;
+            helperTexts.helperTextTable = "No itemas are addedd";
+        }
+
+        setMainValues({
+            ...mainValues,
+            helperTexts: helperTexts,
+            errors: errors
+        });
+        return isValid;
+    }
 
     return (
         <div>
@@ -200,24 +329,36 @@ function MakeRequest() {
                                         <Divider variant="middle" />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorSFName}
                                             id="outlined-required"
                                             label="First Name"
                                             defaultValue=""
                                             size="small"
+                                            name="SFName"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextSFName}
                                         />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorSLName}
                                             id="outlined-required"
                                             label="Last Name"
                                             defaultValue=""
                                             size="small"
+                                            name="SLName"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextSLName}
                                         />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorSMobile}
                                             id="outlined-required"
                                             label="Mobile No"
                                             defaultValue=""
                                             size="small"
+                                            name="SMobile"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextSMobile}
                                         />
                                     </div>
                                     <br /><br />
@@ -228,24 +369,36 @@ function MakeRequest() {
                                         <Divider variant="middle" />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorRFName}
                                             id="outlined-required"
                                             label="First Name"
                                             defaultValue=""
                                             size="small"
+                                            name="RFName"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextRFName}
                                         />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorRLName}
                                             id="outlined-required"
                                             label="Last Name"
                                             defaultValue=""
                                             size="small"
+                                            name="RLName"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextRLName}
                                         />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorRMobile}
                                             id="outlined-required"
                                             label="Mobile No"
                                             defaultValue=""
                                             size="small"
+                                            name="RMobile"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextRMobile}
                                         />
                                     </div>
                                     <br /><br />
@@ -256,9 +409,13 @@ function MakeRequest() {
                                         <Divider variant="middle" />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorPickUp}
                                             id="outlined-required"
                                             label="Pick up location"
                                             defaultValue=""
+                                            name="PickUp"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextPickUp}
                                             size="small"
                                             InputProps={{
                                                 endAdornment: <InputAdornment position="start">
@@ -270,10 +427,14 @@ function MakeRequest() {
                                         />
                                         <TextField
                                             required
+                                            error={mainValues.errors.isErrorDropOff}
                                             id="outlined-required"
                                             label="Drop off location"
                                             defaultValue=""
                                             size="small"
+                                            name="DropOff"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextDropOff}
                                             InputProps={{
                                                 endAdornment: <InputAdornment position="start">
                                                     <IconButton type="submit" sx={{ p: '5px', marginRight: "-15px" }} aria-label="search">
@@ -282,8 +443,30 @@ function MakeRequest() {
                                                 </InputAdornment>,
                                             }}
                                         />
+                                        <TextField
+                                            required
+                                            error={mainValues.errors.isErrorNbPickUp}
+                                            id="outlined-required"
+                                            label="Nearest Branch to Pic-kup"
+                                            defaultValue=""
+                                            size="small"
+                                            name="NbPickUp"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextNbPickUp}
+                                        />
+                                        <TextField
+                                            required
+                                            error={mainValues.errors.isErrorNbDropOff}
+                                            id="outlined-required"
+                                            label="Nearest Branch to Drop-off"
+                                            defaultValue=""
+                                            size="small"
+                                            name="NbDropOff"
+                                            onChange={handleMainTextChange}
+                                            helperText={mainValues.helperTexts.helperTextNbDropOff}
+                                        />
 
-                                        <FormControl sx={{ m: 2, width: "30ch" }}>
+                                        {/* <FormControl sx={{ m: 2, width: "30ch" }}>
                                             <InputLabel id="demo-controlled-open-select-label">Nearest Branch</InputLabel>
                                             <Select
                                                 labelId="demo-controlled-open-select-label"
@@ -295,6 +478,7 @@ function MakeRequest() {
                                                 label="Nearest Branch"
                                                 onChange={handleChange}
                                                 size="small"
+                                                name="Branch"
                                             >
                                                 <MenuItem value="">
                                                     <em>None</em>
@@ -303,7 +487,7 @@ function MakeRequest() {
                                                 <MenuItem value={20}>Galle</MenuItem>
                                                 <MenuItem value={30}>Colombo</MenuItem>
                                             </Select>
-                                        </FormControl>
+                                        </FormControl> */}
                                     </div>
 
                                 </Box>
@@ -327,9 +511,12 @@ function MakeRequest() {
                                     // checkboxSelection
                                     sx={{ height: 370 }}
                                 />
+                                <Typography variant="caption" display="block" gutterBottom sx={{ mt: 1, color: "error.main" }}>
+                                    {mainValues.helperTexts.helperTextTable}
+                                </Typography>
                                 <br /><br />
                                 <Button variant="contained" color="success" sx={{ mr: 1, mb: 3 }}>Reset</Button>
-                                <Button variant="contained" color="info" sx={{ mr: 1, mb: 3 }}>Make Request</Button>
+                                <Button variant="contained" color="info" sx={{ mr: 1, mb: 3 }} onClick={handleMakeRequest}>Make Request</Button>
                             </Grid>
 
                         </Grid>
@@ -421,6 +608,29 @@ function MakeRequest() {
                 <DialogActions>
                     <Button onClick={handleCloseAddItem}>Cancel</Button>
                     <Button onClick={handleSuccessAddItem}>Add Item</Button>
+                </DialogActions>
+            </Dialog>
+
+
+            <Dialog
+                open={openConfirmDialog}
+                onClose={handleConfirmClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Are you sure?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        By confirming you can proceed with the new delivery request.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleConfirmClose}>Cancel</Button>
+                    <Button onClick={completeMakeRequest} autoFocus>
+                        Confirm
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>
