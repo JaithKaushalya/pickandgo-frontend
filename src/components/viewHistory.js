@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
+import Header from './header';
 
 function createData(branchID, city, district, telephone) {
   return { branchID, city, district, telephone };
@@ -26,7 +27,9 @@ class ViewHistory extends Component {
   render() {
     return (
       <>
-        <div><br />
+        <div>
+        <Header />
+        <br />
           <Typography style={{ fontWeight: '900', marginTop: '100px', marginBottom: '25px' }} align="center" variant="h4" gutterBottom component="div">
             Delivery History
           </Typography>

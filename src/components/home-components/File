@@ -8,7 +8,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
-import Header from './header';
 
 function createData(branchID, city, district, telephone) {
   return { branchID, city, district, telephone };
@@ -23,47 +22,12 @@ const rows = [
 const pages = ['Add Branch', 'Manage Branch'];
 const pageRouteLinks = ['/addBranch', '/manage-branch'];
 
-// Manage Branch Class
-
 class ManageBranch extends Component {
-
- constructor(props) {
-    super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-      items: []
-    };
-  }
-
-  componentDidMount() {
-    fetch("https://api.example.com/items")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            items: result.items
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
-  }
 
   render() {
     return (
       <>
-        <div>
-        <Header />
-        <br />
+        <div><br />
           <Typography style={{ marginLeft: '20px', marginTop: '75px', marginBottom: '25px' }} variant="h4" gutterBottom component="div">
             Branch Management
           </Typography>

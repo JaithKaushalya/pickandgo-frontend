@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
 import { Container, Grid, Card, CardContent, Button, TextField , Divider} from '@mui/material';
 import Box from '@mui/material/Box';
+import Header from './header';
 
 class AddBranch extends Component {
 
@@ -17,6 +18,7 @@ class AddBranch extends Component {
     return (
      <>
         <div>
+        <Header />
         <div><br />
           <Typography style={{ marginLeft: '20px', marginTop: '75px', marginBottom: '25px' }} variant="h4" gutterBottom component="div">
             Branch Management
