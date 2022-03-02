@@ -14,21 +14,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { DataGrid } from '@mui/x-data-grid';
 
+import {
+    InfoWindow,
+    withScriptjs,
+    withGoogleMap,
+    GoogleMap,
+    Marker,
+} from "react-google-maps";
+import Geocode from "react-geocode";
+
+Geocode.setApiKey('AIzaSyBR4f3ehB68aR3IN3D6uCK6RHZbzCH0M40');
+
 function MakeRequest() {
-    // const [branch, setABranch] = React.useState('');
-    // const [open, setOpen] = React.useState(false);
-
-    // const handleChange = (event) => {
-    //     setABranch(event.target.value);
-    // };
-
-    // const handleClose = () => {
-    //     setOpen(false);
-    // };
-
-    // const handleOpen = () => {
-    //     setOpen(true);
-    // };
 
     const [rows, setTableData] = React.useState([]);
 
@@ -228,7 +225,7 @@ function MakeRequest() {
     const completeMakeRequest = () => {
 
         // CREATE BACK END CALL HERE    
-     }
+    }
 
     const addMainFrameValidator = () => {
         var isValid = true;
@@ -296,6 +293,106 @@ function MakeRequest() {
         });
         return isValid;
     }
+
+    //  google map integration /////////////////////////////////////////////////
+
+    const [openMapDialog, setOpenMapDialog] = React.useState(false);
+    const handleMapClose = () => {
+        setOpenMapDialog(false);
+    }
+
+    const handleOpenMapDialog = (event) => {
+        event.preventDefault();
+        setOpenMapDialog(true);
+    }
+
+    const handleMapSelect = () => {
+
+        // map select function
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    const [map, setMapData] = React.useState({
+        zoom: 8,
+        height: '',
+        mapPoition: {
+            lat: 7.291418,
+            lng: 80.636696,
+        },
+        markerPostion1: {
+            lat: 6.927079,
+            lng: 79.861244,
+        },
+        markerPostion2: {
+            lat: 7.291418,
+            lng: 80.636696,
+        }
+    });
+
+    const onMarker1DragEnd = (event) => {
+        let newLat = event.latLng.lat();
+        let newLng = event.latLng.lng();
+
+        setMapData({
+            ...map,
+            markerPostion1: {
+                lat: newLat,
+                lng: newLng,
+            }
+        });
+
+        Geocode.fromLatLng(newLat, newLng).then(response => {
+            setMainValues({
+                ...mainValues,
+                PickUp: response.results[0].formatted_address ? response.results[0].formatted_address : "",
+            });
+        });
+    }
+
+    const onMarker2DragEnd = (event) => {
+        let new2Lat = event.latLng.lat();
+        let new2Lng = event.latLng.lng();
+
+        setMapData({
+            ...map,
+            markerPostion2: {
+                lat: new2Lat,
+                lng: new2Lng,
+            }
+        });
+
+        Geocode.fromLatLng(new2Lat, new2Lng).then(response => {
+            console.log(response);
+            setMainValues({
+                ...mainValues,
+                DropOff: response.results[0].formatted_address ? response.results[0].formatted_address : "",
+            });
+        });
+    }
+
+    const MapWithAMarker = withScriptjs(withGoogleMap(props =>
+        <GoogleMap
+            defaultZoom={map.zoom}
+            defaultCenter={{ lat: map.mapPoition.lat, lng: map.mapPoition.lng }}
+        >
+            <Marker
+                key={"M001"}
+                draggable={true}
+                onDragEnd={onMarker1DragEnd}
+                defaultPosition={{ lat: map.markerPostion1.lat, lng: map.markerPostion1.lng }}>
+                <InfoWindow><div>Pick-Up</div></InfoWindow>
+            </Marker>
+
+            <Marker
+                key={"M002"}
+                draggable={true}
+                onDragEnd={onMarker2DragEnd}
+                defaultPosition={{ lat: map.markerPostion2.lat, lng: map.markerPostion2.lng }}>
+                <InfoWindow><div>Drop-Off</div></InfoWindow>
+            </Marker>
+        </GoogleMap >
+    ));
+
 
     return (
         <div>
@@ -408,7 +505,9 @@ function MakeRequest() {
                                         <Divider variant="middle" />
                                         <TextField
                                             required
+                                            disabled={true}
                                             error={mainValues.errors.isErrorPickUp}
+                                            value={mainValues.PickUp}
                                             id="outlined-required"
                                             label="Pick up location"
                                             defaultValue=""
@@ -418,8 +517,9 @@ function MakeRequest() {
                                             size="small"
                                             InputProps={{
                                                 endAdornment: <InputAdornment position="start">
-                                                    <IconButton type="submit" sx={{ p: '5px', marginRight: "-15px" }} aria-label="search">
-                                                        <SearchIcon />
+                                                    <IconButton type="submit" sx={{ p: '5px', marginRight: "-15px" }} aria-label="search"
+                                                    >
+                                                        <SearchIcon onClick={handleOpenMapDialog} />
                                                     </IconButton>
                                                 </InputAdornment>,
                                             }}
@@ -427,6 +527,8 @@ function MakeRequest() {
                                         <TextField
                                             required
                                             error={mainValues.errors.isErrorDropOff}
+                                            value={mainValues.DropOff}
+                                            disabled={true}
                                             id="outlined-required"
                                             label="Drop off location"
                                             defaultValue=""
@@ -436,8 +538,9 @@ function MakeRequest() {
                                             helperText={mainValues.helperTexts.helperTextDropOff}
                                             InputProps={{
                                                 endAdornment: <InputAdornment position="start">
-                                                    <IconButton type="submit" sx={{ p: '5px', marginRight: "-15px" }} aria-label="search">
-                                                        <SearchIcon />
+                                                    <IconButton type="submit" sx={{ p: '5px', marginRight: "-15px" }} aria-label="search"
+                                                    >
+                                                        <SearchIcon onClick={handleOpenMapDialog} />
                                                     </IconButton>
                                                 </InputAdornment>,
                                             }}
@@ -464,29 +567,6 @@ function MakeRequest() {
                                             onChange={handleMainTextChange}
                                             helperText={mainValues.helperTexts.helperTextNbDropOff}
                                         />
-
-                                        {/* <FormControl sx={{ m: 2, width: "30ch" }}>
-                                            <InputLabel id="demo-controlled-open-select-label">Nearest Branch</InputLabel>
-                                            <Select
-                                                labelId="demo-controlled-open-select-label"
-                                                id="demo-controlled-open-select"
-                                                open={open}
-                                                onClose={handleClose}
-                                                onOpen={handleOpen}
-                                                value={branch}
-                                                label="Nearest Branch"
-                                                onChange={handleChange}
-                                                size="small"
-                                                name="Branch"
-                                            >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Matara</MenuItem>
-                                                <MenuItem value={20}>Galle</MenuItem>
-                                                <MenuItem value={30}>Colombo</MenuItem>
-                                            </Select>
-                                        </FormControl> */}
                                     </div>
 
                                 </Box>
@@ -514,7 +594,7 @@ function MakeRequest() {
                                     {mainValues.helperTexts.helperTextTable}
                                 </Typography>
                                 <br /><br />
-                                <Button variant="contained" color="success" sx={{ mr: 1, mb: 3 }}>Reset</Button>
+                                <Button variant="contained" color="success" sx={{ mr: 1, mb: 3 }} >Reset</Button>
                                 <Button variant="contained" color="info" sx={{ mr: 1, mb: 3 }} onClick={handleMakeRequest}>Make Request</Button>
                             </Grid>
 
@@ -629,6 +709,76 @@ function MakeRequest() {
                     <Button onClick={handleConfirmClose}>Cancel</Button>
                     <Button onClick={completeMakeRequest} autoFocus>
                         Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openMapDialog}
+                onClose={handleMapClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                fullWidth={true}
+                maxWidth="md"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Select your locations"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Select pick-up and drop-off locations to proceed with the request.
+                    </DialogContentText>
+
+                    <Box
+                        component="form"
+                        sx={{
+                            '& .MuiTextField-root': { width: '100%' },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <div>
+                            <TextField
+                                sx={{ marginTop: "20px" }}
+                                // error={addItemValues.errors.isErrorItem}
+                                required
+                                id="outlined-required"
+                                label="Pick-Up Location"
+                                defaultValue=""
+                                size="small"
+                                name="Item"
+                                value={mainValues.PickUp}
+                            // onChange={handleTextChange}
+                            // helperText={addItemValues.helperTexts.helperTextItem}
+                            />
+                            <TextField
+                                sx={{ marginTop: "20px" }}
+                                // error={addItemValues.errors.isErrorWeight}
+                                required
+                                id="outlined-required"
+                                label="Drop-Off Location"
+                                defaultValue=""
+                                // onChange={handleTextChange}
+                                // helperText={addItemValues.helperTexts.helperTextWeight}
+                                value={mainValues.DropOff}
+                                size="small"
+                                name="Weight"
+                            />
+
+                        </div>
+                    </Box>
+                    <br /><br />
+                    <MapWithAMarker
+                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR4f3ehB68aR3IN3D6uCK6RHZbzCH0M40&v=3.exp&libraries=geometry,drawing,places"
+                        loadingElement={<div style={{ height: `100%` }} />}
+                        containerElement={<div style={{ height: `400px` }} />}
+                        mapElement={<div style={{ height: `100%` }} />}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleMapClose}>Cancel</Button>
+                    <Button onClick={handleMapSelect} autoFocus>
+                        Select
                     </Button>
                 </DialogActions>
             </Dialog>
