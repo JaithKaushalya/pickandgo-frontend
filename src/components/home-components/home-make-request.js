@@ -5,8 +5,6 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import {
     Container, Grid, Card, CardContent, Button, TextField, Divider, InputAdornment, IconButton,
-    MenuItem, Select, InputLabel, FormControl,
-    Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -15,16 +13,9 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { DataGrid } from '@mui/x-data-grid';
 
-import {
-    InfoWindow,
-    withScriptjs,
-    withGoogleMap,
-    GoogleMap,
-    Marker,
-} from "react-google-maps";
-import Geocode from "react-geocode";
+import MapComponent from "./map-component";
 
-Geocode.setApiKey('AIzaSyBR4f3ehB68aR3IN3D6uCK6RHZbzCH0M40');
+
 
 function MakeRequest() {
 
@@ -180,7 +171,11 @@ function MakeRequest() {
         RLName: "",
         RMobile: "",
         PickUp: "",
+        PLat: 6.927079,
+        PLng: 79.861244,
         DropOff: "",
+        DLat: 7.291418,
+        DLng: 80.636696,
         NbPickUp: "",
         NbDropOff: "",
         helperTexts: {
@@ -307,93 +302,19 @@ function MakeRequest() {
         setOpenMapDialog(true);
     }
 
-    const handleMapSelect = () => {
+    const handleMapSelect = (state) => {
+        setMainValues({
+            ...mainValues,
+            PickUp: state.pickUp ? state.pickUp : "",
+            DropOff: state.dropOff ? state.dropOff : "",
+            PLat: state.markerPostion1.lat,
+            PLng: state.markerPostion1.lng,
+            DLat: state.markerPostion2.lat,
+            DLng: state.markerPostion2.lng,
+        });
 
-        // map select function
+        setOpenMapDialog(false);
     }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    const [map, setMapData] = React.useState({
-        zoom: 8,
-        height: '',
-        mapPoition: {
-            lat: 7.291418,
-            lng: 80.636696,
-        },
-        markerPostion1: {
-            lat: 6.927079,
-            lng: 79.861244,
-        },
-        markerPostion2: {
-            lat: 7.291418,
-            lng: 80.636696,
-        }
-    });
-
-    const onMarker1DragEnd = (event) => {
-        let newLat = event.latLng.lat();
-        let newLng = event.latLng.lng();
-
-        setMapData({
-            ...map,
-            markerPostion1: {
-                lat: newLat,
-                lng: newLng,
-            }
-        });
-
-        Geocode.fromLatLng(newLat, newLng).then(response => {
-            setMainValues({
-                ...mainValues,
-                PickUp: response.results[0].formatted_address ? response.results[0].formatted_address : "",
-            });
-        });
-    }
-
-    const onMarker2DragEnd = (event) => {
-        let new2Lat = event.latLng.lat();
-        let new2Lng = event.latLng.lng();
-
-        setMapData({
-            ...map,
-            markerPostion2: {
-                lat: new2Lat,
-                lng: new2Lng,
-            }
-        });
-
-        Geocode.fromLatLng(new2Lat, new2Lng).then(response => {
-            console.log(response);
-            setMainValues({
-                ...mainValues,
-                DropOff: response.results[0].formatted_address ? response.results[0].formatted_address : "",
-            });
-        });
-    }
-
-    const MapWithAMarker = withScriptjs(withGoogleMap(props =>
-        <GoogleMap
-            defaultZoom={map.zoom}
-            defaultCenter={{ lat: map.mapPoition.lat, lng: map.mapPoition.lng }}
-        >
-            <Marker
-                key={"M001"}
-                draggable={true}
-                onDragEnd={onMarker1DragEnd}
-                defaultPosition={{ lat: map.markerPostion1.lat, lng: map.markerPostion1.lng }}>
-                <InfoWindow><div>Pick-Up</div></InfoWindow>
-            </Marker>
-
-            <Marker
-                key={"M002"}
-                draggable={true}
-                onDragEnd={onMarker2DragEnd}
-                defaultPosition={{ lat: map.markerPostion2.lat, lng: map.markerPostion2.lng }}>
-                <InfoWindow><div>Drop-Off</div></InfoWindow>
-            </Marker>
-        </GoogleMap >
-    ));
-
 
     return (
         <div>
@@ -569,10 +490,7 @@ function MakeRequest() {
                                             helperText={mainValues.helperTexts.helperTextNbDropOff}
                                         />
                                     </div>
-
                                 </Box>
-
-
 
                             </Grid>
                             <Grid item xs={6}>
@@ -588,7 +506,6 @@ function MakeRequest() {
                                     columns={columns}
                                     pageSize={5}
                                     rowsPerPageOptions={[5]}
-                                    // checkboxSelection
                                     sx={{ height: 370 }}
                                 />
                                 <Typography variant="caption" display="block" gutterBottom sx={{ mt: 1, color: "error.main" }}>
@@ -722,66 +639,16 @@ function MakeRequest() {
                 fullWidth={true}
                 maxWidth="md"
             >
-                <DialogTitle id="alert-dialog-title">
-                    {"Select your locations"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Select pick-up and drop-off locations to proceed with the request.
-                    </DialogContentText>
-
-                    <Box
-                        component="form"
-                        sx={{
-                            '& .MuiTextField-root': { width: '100%' },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <div>
-                            <TextField
-                                sx={{ marginTop: "20px" }}
-                                // error={addItemValues.errors.isErrorItem}
-                                required
-                                id="outlined-required"
-                                label="Pick-Up Location"
-                                defaultValue=""
-                                size="small"
-                                name="Item"
-                                value={mainValues.PickUp}
-                            // onChange={handleTextChange}
-                            // helperText={addItemValues.helperTexts.helperTextItem}
-                            />
-                            <TextField
-                                sx={{ marginTop: "20px" }}
-                                // error={addItemValues.errors.isErrorWeight}
-                                required
-                                id="outlined-required"
-                                label="Drop-Off Location"
-                                defaultValue=""
-                                // onChange={handleTextChange}
-                                // helperText={addItemValues.helperTexts.helperTextWeight}
-                                value={mainValues.DropOff}
-                                size="small"
-                                name="Weight"
-                            />
-
-                        </div>
-                    </Box>
-                    <br /><br />
-                    <MapWithAMarker
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR4f3ehB68aR3IN3D6uCK6RHZbzCH0M40&v=3.exp&libraries=geometry,drawing,places"
-                        loadingElement={<div style={{ height: `100%` }} />}
-                        containerElement={<div style={{ height: `400px` }} />}
-                        mapElement={<div style={{ height: `100%` }} />}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleMapClose}>Cancel</Button>
-                    <Button onClick={handleMapSelect} autoFocus>
-                        Select
-                    </Button>
-                </DialogActions>
+                <MapComponent
+                    pickUp={mainValues.PickUp}
+                    pLat={mainValues.PLat}
+                    pLng={mainValues.PLng}
+                    dropOff={mainValues.DropOff}
+                    dLat={mainValues.DLat}
+                    dLng={mainValues.DLng}
+                    handleMapClose={handleMapClose}
+                    handleMapSelect={handleMapSelect}
+                />
             </Dialog>
         </div>
 
