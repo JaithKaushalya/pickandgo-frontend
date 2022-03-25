@@ -14,14 +14,17 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import MapComponent from "./map-component";
 
+import { makeDelivery } from '../../services/delivery-service';
+import { getNearestBranches } from '../../services/branch-service';
+
 
 
 function MakeRequest() {
 
     const [rows, setTableData] = React.useState([]);
 
-    function createData(id, item, quantity, weight) {
-        return { id, item, quantity, weight };
+    function createData(id, item, quantity, dimension, weight) {
+        return { id, item, quantity, dimension, weight };
     }
 
     const handleTableDeleteClick = (event, cellValue) => {
@@ -39,6 +42,7 @@ function MakeRequest() {
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'item', headerName: 'Item', width: 130 },
         { field: 'quantity', headerName: 'Qty', width: 130 },
+        { field: 'dimension', headerName: 'Dimenstions', width: 90 },
         { field: 'weight', headerName: 'Weight', width: 90 },
         {
             field: "delete",
@@ -110,7 +114,7 @@ function MakeRequest() {
     const handleSuccessAddItem = () => {
         if (addNewItemValidator()) {
             let rowData = Object.assign([], rows);
-            rowData.push(createData((rows.length + 1), addItemValues.Item, addItemValues.Qty, addItemValues.Weight));
+            rowData.push(createData((rows.length + 1), addItemValues.Item, addItemValues.Qty, addItemValues.Dimensions, addItemValues.Weight));
             setTableData(rowData);
             handleCloseAddItem();
         }
@@ -161,6 +165,12 @@ function MakeRequest() {
         setOpenConfirmDialog(false);
     }
 
+    //  schedule dialog box
+    const [openScheduleDialog, setOpenScheduleDialog] = React.useState(false);
+    const handleScheduleClose = () => {
+        setOpenScheduleDialog(false);
+    }
+
     //////////////////////////////
     const [mainValues, setMainValues] = React.useState({
         SFName: "",
@@ -176,7 +186,9 @@ function MakeRequest() {
         DLat: 7.291418,
         DLng: 80.636696,
         NbPickUp: "",
+        NbPickUpBranchId : 1,
         NbDropOff: "",
+        NbDropOffBranchId: 1,
         helperTexts: {
             helperTextSFName: "",
             helperTextSLName: "",
@@ -219,7 +231,73 @@ function MakeRequest() {
 
     const completeMakeRequest = () => {
 
-        // CREATE BACK END CALL HERE    
+        let items = [];
+        rows.forEach(row => {
+            let singleDataRow = {
+                itemId: 0,
+                type: row.item,
+                dimension: row.dimension,
+                weight: row.weight,
+                amount: row.quantity
+            }
+            items.push(singleDataRow);
+        });
+
+        let user = JSON.parse(sessionStorage.getItem("user"));
+
+        // CREATE BACK END CALL HERE 
+        let delivery = {
+            deliveryId: 0,
+            scheduledPickupAt: mainValues.PickUp,
+            date: "2022-02-25",
+            pickUpLongitute: mainValues.PLng,
+            pickupLatitute: mainValues.PLat,
+            scheduledDeliverAt: mainValues.DropOff,
+            deliverLongitute: mainValues.DLng,
+            deliverLatitute: mainValues.DLat,
+            totalAmount: 0.0,
+            user: {
+                username: user.username
+            },
+            receiver: {
+                senderId: 0,
+                name: mainValues.RFName + " " + mainValues.RLName,
+                mobileNo: mainValues.RMobile,
+                address: mainValues.DropOff
+            },
+            sender: {
+                senderId: 0,
+                name: mainValues.SFName + " " + mainValues.SLName,
+                mobileNo: mainValues.SMobile,
+                address: mainValues.PickUp
+            },
+            payment: null,
+            pickupBranch: {
+                branchId: mainValues.NbPickUpBranchId
+            },
+            destinationBranch:  {
+                branchId: mainValues.NbDropOffBranchId
+            },
+            deliveryDetails: null,
+            vehicle: null,
+            items: items
+        }
+
+        console.log(delivery);
+
+        makeDelivery(delivery).then(res => {
+            if (res.status == 200) {
+                // success
+                setOpenConfirmDialog(false);
+                alert("Success... show schedule here...");
+                setOpenScheduleDialog(true)
+            } else if (res.status == 401 || res.status == 403) {
+                window.location.href = "/login"
+            } else {
+                alert("Something wrong with the transaction...");
+            }
+        });
+
     }
 
     const addMainFrameValidator = () => {
@@ -302,14 +380,44 @@ function MakeRequest() {
     }
 
     const handleMapSelect = (state) => {
-        setMainValues({
-            ...mainValues,
-            PickUp: state.pickUp ? state.pickUp : "",
-            DropOff: state.dropOff ? state.dropOff : "",
-            PLat: state.markerPostion1.lat,
-            PLng: state.markerPostion1.lng,
-            DLat: state.markerPostion2.lat,
-            DLng: state.markerPostion2.lng,
+        // setMainValues({
+        //     ...mainValues,
+        //     PickUp: state.pickUp ? state.pickUp : "",
+        //     DropOff: state.dropOff ? state.dropOff : "",
+        //     PLat: state.markerPostion1.lat,
+        //     PLng: state.markerPostion1.lng,
+        //     DLat: state.markerPostion2.lat,
+        //     DLng: state.markerPostion2.lng,
+        // });
+
+        let inputDto = {
+            pickUpLat: mainValues.PLat,
+            pickUpLng: mainValues.PLng,
+            dropOffLat: mainValues.DLat,
+            dropOffLng: mainValues.DLng
+        }
+        getNearestBranches(inputDto).then(res => {
+            if (res.status == 200) {
+                // success
+                console.log(res);
+                setMainValues({
+                    ...mainValues,
+                    PickUp: state.pickUp ? state.pickUp : "",
+                    DropOff: state.dropOff ? state.dropOff : "",
+                    PLat: state.markerPostion1.lat,
+                    PLng: state.markerPostion1.lng,
+                    DLat: state.markerPostion2.lat,
+                    DLng: state.markerPostion2.lng,
+                    NbPickUp: res.data.pickUpNearestBranch.city,
+                    NbDropOff: res.data.dropOffNearestBranch.city,
+                    NbPickUpBranchId: res.data.pickUpNearestBranch.branchId,
+                    NbDropOffBranchId: res.data.dropOffNearestBranch.branchId
+                });
+            } else if (res.status == 401 || res.status == 403) {
+                window.location.href = "/login"
+            } else {
+                alert("Something wrong with getting branches...");
+            }
         });
 
         setOpenMapDialog(false);
@@ -469,6 +577,7 @@ function MakeRequest() {
                                         <TextField
                                             required
                                             error={mainValues.errors.isErrorNbPickUp}
+                                            value={mainValues.NbPickUp}
                                             id="outlined-required"
                                             label="Nearest Branch to Pic-kup"
                                             defaultValue=""
@@ -480,6 +589,7 @@ function MakeRequest() {
                                         <TextField
                                             required
                                             error={mainValues.errors.isErrorNbDropOff}
+                                            value={mainValues.NbDropOff}
                                             id="outlined-required"
                                             label="Nearest Branch to Drop-off"
                                             defaultValue=""
@@ -627,6 +737,29 @@ function MakeRequest() {
                     <Button onClick={completeMakeRequest} autoFocus>
                         Confirm
                     </Button>
+                </DialogActions>
+            </Dialog>
+
+
+            <Dialog
+                open={openScheduleDialog}
+                onClose={handleScheduleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"You have placed request successfully."}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Please refer the following request details.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleScheduleClose}>Cancel</Button>
+                    {/* <Button onClick={completeMakeRequest} autoFocus>
+                        Confirm
+                    </Button> */}
                 </DialogActions>
             </Dialog>
 
