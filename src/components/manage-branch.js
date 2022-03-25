@@ -9,6 +9,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
 import Header from './header';
+import axios from "axios";
+import { Properties } from "../properties";
 
 function createData(branchID, city, district, telephone) {
   return { branchID, city, district, telephone };
@@ -32,33 +34,27 @@ class ManageBranch extends Component {
     this.state = {
       error: null,
       isLoaded: false,
-      items: []
+      branches: []
     };
+    componentDisMount();
   }
 
-  componentDidMount() {
-    fetch("https://api.example.com/items")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            items: result.items
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-      )
+  componentDisMount() {
+    const res = axios.get(`${Properties.baseUrl}/branch`);
+    console.log(res);
+    this.setState({
+      isLoaded: true,
+      branches: res.branches
+    });
   }
 
   render() {
+    const { error, isLoaded, branches } = this.state;
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else if (!isLoaded) {
+      return <div>Loading...</div>;
+    } else {
     return (
       <>
         <div>
@@ -97,28 +93,30 @@ class ManageBranch extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {branches.map((branch) => (
                 <TableRow
-                  key={row.name}
+                  key={branch.branch_id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell align="center">{row.branchID}</TableCell>
-                  <TableCell align="center">{row.city}</TableCell>
-                  <TableCell align="center">{row.district}</TableCell>
-                  <TableCell align="center">{row.telephone}</TableCell>
+                  <TableCell align="center">{branch.branch_id}</TableCell>
+                  <TableCell align="center">{branch.city}</TableCell>
+                  <TableCell align="center">{branch.district}</TableCell>
+                  <TableCell align="center">{branch.telephone}</TableCell>
                   <TableCell align="center">
                     <div>
                       <a style={{ textDecoration: 'none', color: 'Black', width: '80px', borderRadius: '10px', backgroundColor: '#dc3545', padding: '10px', paddingLeft: '30px', paddingRight: '30px' }} align="center" href="#">Delete</a>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+  }
             </TableBody>
           </Table>
         </TableContainer>
       </>
     );
   }
+}
 
 }
 
