@@ -32,14 +32,57 @@ export const register = async (user) => {
     }
 }
 
-export const branch = () => {
+export const loadAllDeliveries = async () => {
 
     try {
 
-        const res = await axios.get(`${Properties.baseUrl}/branch`);
-        return res.data;
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.get(`${Properties.baseUrl}/delivery`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
 
     } catch (error) {
         return { "status": error.response.status, "error": error.response.data }
     }
 }
+
+export const loadAllPerson = async () => {
+
+    try {
+
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.get(`${Properties.baseUrl}/delivery-person`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+
+export const allocatePerson = async (allocation) => {
+
+    try {
+
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.put(`${Properties.baseUrl}/delivery/allocation`, allocation, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+
