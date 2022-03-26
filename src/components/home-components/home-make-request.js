@@ -169,6 +169,7 @@ function MakeRequest() {
     const [openScheduleDialog, setOpenScheduleDialog] = React.useState(false);
     const handleScheduleClose = () => {
         setOpenScheduleDialog(false);
+        window.location.href = "/"
     }
 
     //////////////////////////////
@@ -186,7 +187,7 @@ function MakeRequest() {
         DLat: 7.291418,
         DLng: 80.636696,
         NbPickUp: "",
-        NbPickUpBranchId : 1,
+        NbPickUpBranchId: 1,
         NbDropOff: "",
         NbDropOffBranchId: 1,
         helperTexts: {
@@ -215,6 +216,10 @@ function MakeRequest() {
             isErrorNbDropOff: false,
         }
     });
+
+    const resetData = () => {
+        window.location.href = "/"
+    }
 
     const handleMainTextChange = (event) => {
         setMainValues({
@@ -275,7 +280,7 @@ function MakeRequest() {
             pickupBranch: {
                 branchId: mainValues.NbPickUpBranchId
             },
-            destinationBranch:  {
+            destinationBranch: {
                 branchId: mainValues.NbDropOffBranchId
             },
             deliveryDetails: null,
@@ -289,8 +294,8 @@ function MakeRequest() {
             if (res.status == 200) {
                 // success
                 setOpenConfirmDialog(false);
-                alert("Success... show schedule here...");
-                setOpenScheduleDialog(true)
+                // alert("Success... show schedule here...");
+                setOpenScheduleDialog(true);
             } else if (res.status == 401 || res.status == 403) {
                 window.location.href = "/login"
             } else {
@@ -621,7 +626,7 @@ function MakeRequest() {
                                     {mainValues.helperTexts.helperTextTable}
                                 </Typography>
                                 <br /><br />
-                                <Button variant="contained" color="success" sx={{ mr: 1, mb: 3 }} >Reset</Button>
+                                <Button variant="contained" color="success" sx={{ mr: 1, mb: 3 }} onClick={resetData}>Reset</Button>
                                 <Button variant="contained" color="info" sx={{ mr: 1, mb: 3 }} onClick={handleMakeRequest}>Make Request</Button>
                             </Grid>
 
