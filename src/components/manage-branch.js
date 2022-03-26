@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Table from '@mui/material/Table';
-import { Typography } from "@mui/material"
+import { Typography } from "@mui/material";
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
@@ -29,32 +29,33 @@ const pageRouteLinks = ['/addBranch', '/manage-branch'];
 
 class ManageBranch extends Component {
 
- constructor(props) {
-    super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-      branches: []
-    };
-    componentDisMount();
-  }
+// constructor(props) {
+//    super(props);
+//    this.state = {
+//      error: null,
+//      isLoaded: false,
+//      branches: []
+//    };
+//    componentDisMount();
+//  }
 
-  componentDisMount() {
-    const res = axios.get(`${Properties.baseUrl}/branch`);
-    console.log(res);
-    this.setState({
-      isLoaded: true,
-      branches: res.branches
-    });
-  }
+//  componentDisMount() {
+//    const res = axios.get(`${Properties.baseUrl}/branch`);
+//    console.log(res);
+//    this.setState({
+//      isLoaded: true,
+//      branches: res.branches
+//    }
+//    );
+//  }
 
   render() {
-    const { error, isLoaded, branches } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
-      return <div>Loading...</div>;
-    } else {
+//    const { error, isLoaded, branches } = this.state;
+//    if (error) {
+//      return <div>Error: {error.message}</div>;
+//    } else if (!isLoaded) {
+//      return <div>Loading...</div>;
+//    } else {
     return (
       <>
         <div>
@@ -93,12 +94,12 @@ class ManageBranch extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {branches.map((branch) => (
+              {rows.map((branch) => (
                 <TableRow
-                  key={branch.branch_id}
+                  key={branch.name}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell align="center">{branch.branch_id}</TableCell>
+                  <TableCell align="center">{branch.branchID}</TableCell>
                   <TableCell align="center">{branch.city}</TableCell>
                   <TableCell align="center">{branch.district}</TableCell>
                   <TableCell align="center">{branch.telephone}</TableCell>
@@ -115,7 +116,7 @@ class ManageBranch extends Component {
         </TableContainer>
       </>
     );
-  }
+//  }
 }
 
 }

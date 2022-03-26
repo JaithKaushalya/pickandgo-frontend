@@ -10,16 +10,16 @@ import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
 import Header from './header';
 
-function createData(branchID, city, district, telephone) {
-  return { branchID, city, district, telephone };
+function createData(deliveryID, dfrom, dto, payment) {
+  return { deliveryID, dfrom, dto, payment };
 }
 
 const rows = [
-  createData(1, "Dematagoda", "Colombo", "077-1234567"),
-  createData(2, "Hatton", "Nuwara Eliya", "054-1234567"),
-  createData(3, "Ginigathhena", "Nuwara Eliya", "081-1234567"),
-  createData(4, "Hiripitiya", "Kurunegala", "076-1234567"),
-  createData(5, "Peradeniya", "Kandy", "037-1234567"),
+  createData(1, "Dematagoda", "Kandy", "Rs.9000/-"),
+  createData(2, "Hatton", "Nuwara Eliya", "Rs.5500/-"),
+  createData(3, "Ginigathhena", "Nuwara Eliya", "Rs.5000/-"),
+  createData(4, "Hiripitiya", "Galle", "Rs.14500/-"),
+  createData(5, "Peradeniya", "Hatton", "Rs.5000/-"),
 ];
 
 class ViewHistory extends Component {
@@ -38,10 +38,10 @@ class ViewHistory extends Component {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Branch ID</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Name</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">District</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Telephone</TableCell>
+                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery ID</TableCell>
+                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Destination From</TableCell>
+                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Destination To</TableCell>
+                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Payment</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -50,10 +50,10 @@ class ViewHistory extends Component {
                   key={row.name}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell align="center">{row.branchID}</TableCell>
-                  <TableCell align="center">{row.city}</TableCell>
-                  <TableCell align="center">{row.district}</TableCell>
-                  <TableCell align="center">{row.telephone}</TableCell>
+                  <TableCell align="center">{row.deliveryID}</TableCell>
+                  <TableCell align="center">{row.dfrom}</TableCell>
+                  <TableCell align="center">{row.dto}</TableCell>
+                  <TableCell align="center">{row.payment}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
