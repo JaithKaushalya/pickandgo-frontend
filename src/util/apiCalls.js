@@ -31,3 +31,15 @@ export const register = async (user) => {
         return { "status": error.response.status, "error": error.response.data }
     }
 }
+
+export const branch = () => {
+
+    try {
+
+        const res = await axios.get(`${Properties.baseUrl}/branch`);
+        return res.data;
+
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
