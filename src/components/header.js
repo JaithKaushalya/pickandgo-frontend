@@ -55,8 +55,12 @@ class Header extends Component {
         this.setState({ anchorElNav: null });
     };
 
-    handleCloseUserMenu = () => {
+    handleCloseUserMenu = (setting) => {
         this.setState({ anchorElUser: null });
+        if (setting === "Logout") {
+            window.location.href = "/login"
+        }
+
     };
 
     handleMakeRequest = () => {
@@ -171,7 +175,7 @@ class Header extends Component {
                                 onClose={this.handleCloseUserMenu}
                             >
                                 {settings.map((setting) => (
-                                    <MenuItem key={setting} onClick={this.handleCloseUserMenu}>
+                                    <MenuItem key={setting} onClick={() => this.handleCloseUserMenu(setting)}>
                                         <Typography textAlign="center">{setting}</Typography>
                                     </MenuItem>
                                 ))}
