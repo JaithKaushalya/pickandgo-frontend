@@ -9,11 +9,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
 import Header from './header';
+import Button from '@mui/material/Button';
 import axios from "axios";
 import { Properties } from "../properties";
+import { loadAllBranches } from '../util/apiCalls';
+import { deleteBranch } from '../util/apiCalls';
+import BranchService from "../services/BranchService";
 
-function createData(branchID, city, district, telephone) {
-  return { branchID, city, district, telephone };
+function createData(branchId, city, district, telephone) {
+  return { branchId, city, district, telephone };
 }
 
 const rows = [
@@ -25,100 +29,225 @@ const rows = [
 const pages = ['Add Branch', 'Manage Branch'];
 const pageRouteLinks = ['/addBranch', '/manage-branch'];
 
+// const [allBranches, setAllBranches] = React.useState([]);
+
+// const BranchLoader = () => {
+//   fetch("http://localhost:9091/pickandgo/Branch",
+//     {
+//       method: 'GET',
+//       headers: {
+//         Accept: '*/*',
+//         'Content-Type': 'application/json',
+//         'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aW5vZCIsInJvbGUiOlsic2VuZGVyIl0sImV4cCI6MTY0ODQwMDEzNCwiaWF0IjoxNjQ4Mzk5OTU0fQ.0HE43OiAy47TXXqTGJLtnRmVGVVSN5w_4jzJyXq1xL0'
+//       }
+//       // body: JSON.stringify("jsonData"),
+//     })
+//     .then(res => res.json())
+//     .then(
+//       (result) => {
+//         console.log(result)
+//       },
+//       (error) => {
+//         console.log(error);
+//       }
+//     )
+// }
+
 // Manage Branch Class
 
-class ManageBranch extends Component {
+// function ManageBranch() {
 
 // constructor(props) {
-//    super(props);
-//    this.state = {
-//      error: null,
-//      isLoaded: false,
-//      branches: []
-//    };
-//    componentDisMount();
-//  }
+//   super(props);
+//   this.state = {
+//     branches: []
+//   }
+// } 
 
-//  componentDisMount() {
-//    const res = axios.get(`${Properties.baseUrl}/branch`);
-//    console.log(res);
-//    this.setState({
-//      isLoaded: true,
-//      branches: res.branches
-//    }
-//    );
-//  }
+// componentDidMount() {
+//   BranchService.getBranches().then((res) => {
+//     this.setState({
+//       branches: res.data
+//     })
+//   });
+// }
 
-  render() {
-//    const { error, isLoaded, branches } = this.state;
-//    if (error) {
-//      return <div>Error: {error.message}</div>;
-//    } else if (!isLoaded) {
-//      return <div>Loading...</div>;
-//    } else {
-    return (
-      <>
-        <div>
+// return (
+//   <div>
+//     <Header pages={pages} pageRouteLinks={pageRouteLinks} />
+//     <div style={{ marginTop: '75px' }}>
+//       <TableContainer component={Paper}>
+//         <Table aria-label="simple table">
+//           <TableHead>
+//             <TableRow>
+//               <TableCell align="center">Branch Id</TableCell>
+//               <TableCell align="center">City</TableCell>
+//               <TableCell align="center">District</TableCell>
+//               <TableCell align="center">Telephone</TableCell>
+//               <TableCell align="center">Action</TableCell>
+//             </TableRow>
+//           </TableHead>
+//           <TableBody>
+//             {rows.map((branch) => (
+//               <TableRow
+//                 key={branch.branchId}
+//                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+//               >
+//                 <TableCell align="center">{branch.branchId}</TableCell>
+//                 <TableCell align="center">{branch.city}</TableCell>
+//                 <TableCell align="center">{branch.district}</TableCell>
+//                 <TableCell align="center">{branch.telephone}</TableCell>
+//                 <TableCell align="center">
+//                   <div>
+//                     <a style={{ textDecoration: 'none', color: 'Black', width: '80px', borderRadius: '10px', backgroundColor: '#dc3545', padding: '10px', paddingLeft: '30px', paddingRight: '30px' }} align="center" href="#">Delete</a>
+//                   </div>
+//                 </TableCell>
+//               </TableRow>
+//             ))
+//             }
+//             {/* {allBranches.length === 0 && <TableCell align="center">No Data to Show</TableCell>} */}
+//           </TableBody>
+//         </Table>
+//       </TableContainer>
+//     </div>
+//   </div>
+// )
+
+// }
+
+const ManageBranch = () => {
+
+  const [allBranches, setAllBranches] = React.useState([]);
+
+  // const handleBranch = async (personId) => {
+  //   const allocation = {
+  //     branchId: setAllBranches.branchID,
+  //     branchPersonId: personId
+  //   }
+  // }
+
+  React.useEffect(() => {
+
+    const getAllBranches = async () => {
+      // const response = await loadAllBranches();
+      // setAllBranches(response.data);
+
+      const branches = [];
+
+      const response = await loadAllBranches();
+     
+      if (response.data !== true) {
+        // alert("Allocation successful.");
+        // window.location.reload();
+
+        response.data.forEach(branch => {
+          branches.push(branch);
+          setAllBranches(branches);
+        });
+
+      } else {
+        alert("Allocation Failed.");
+        // sessionStorage.setItem("user", JSON.stringify(res.data.userData));
+        // sessionStorage.setItem("token", res.data.token);
+
+      }
+
+      console.log(branches);
+
+      // response.data.forEach(branch => {
+      //   branches.push(branch)
+
+
+      //   setAllBranches(branches);
+      // }
+      // )
+    }
+
+    const deleteBranch = async (branchId) => {
+      const response = await deleteBranch(branchId);
+      if (response.data !== true) {
+        alert("Deletion successful.");
+        // window.location.reload();
+
+      } else {
+        alert("Deletion Failed.");
+      }
+      window.location.reload();
+    }
+
+
+    getAllBranches();
+
+  }, []);
+
+  return (
+    <>
+      <div>
         <Header />
         <br />
-          <Typography style={{ marginLeft: '20px', marginTop: '75px', marginBottom: '25px' }} variant="h4" gutterBottom component="div">
-            Branch Management
-          </Typography>
-        </div>
-        <Container>
-          <Wrap>
-            <div>
-              <a style={{ textDecoration: 'none', color: 'white' }} href="#">Manage Branch</a>
-            </div>
-          </Wrap>
-          <Wrap>
-            <div>
-              <a style={{ textDecoration: 'none', color: 'white' }} href="#">Add Branch</a>
-            </div>
-          </Wrap>
-        </Container>
-        <div><br />
-          <Typography style={{ fontWeight: '900' }} align="center" variant="h4" gutterBottom component="div">
-            Manage Branch
-          </Typography>
-        </div>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Branch ID</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Name</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">District</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Telephone</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Action</TableCell>
+        <Typography style={{ marginLeft: '20px', marginTop: '75px', marginBottom: '25px' }} variant="h4" gutterBottom component="div">
+          Branch Management
+        </Typography>
+      </div>
+      <Container>
+        <Wrap>
+          <div>
+            <a style={{ textDecoration: 'none', color: 'white' }} href="#">Manage Branch</a>
+          </div>
+        </Wrap>
+        <Wrap>
+          <div>
+            <a style={{ textDecoration: 'none', color: 'white' }} href="#">Add Branch</a>
+          </div>
+        </Wrap>
+      </Container>
+      <div><br />
+        <Typography style={{ fontWeight: '900' }} align="center" variant="h4" gutterBottom component="div">
+          Manage Branch
+        </Typography>
+      </div>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Branch ID</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Name</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">District</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Telephone</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allBranches.map((branch) => (
+              <TableRow
+                key={branch.branchId}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell align="center">{branch.branchId}</TableCell>
+                <TableCell align="center">{branch.city}</TableCell>
+                <TableCell align="center">{branch.district}</TableCell>
+                <TableCell align="center">{branch.telephone}</TableCell>
+                <TableCell align="center">
+                <Button 
+                      variant="contained" 
+                      color="info"
+                      align="center"
+                      // onClick={deleteBranch()} 
+                      sx={{ mr: 4 }}>Delete</Button>
+                  {/* <div>
+                    <a style={{ textDecoration: 'none', color: 'Black', width: '80px', borderRadius: '10px', backgroundColor: '#dc3545', padding: '10px', paddingLeft: '30px', paddingRight: '30px' }} align="center" href="#">Delete</a>
+                  </div> */}
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((branch) => (
-                <TableRow
-                  key={branch.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell align="center">{branch.branchID}</TableCell>
-                  <TableCell align="center">{branch.city}</TableCell>
-                  <TableCell align="center">{branch.district}</TableCell>
-                  <TableCell align="center">{branch.telephone}</TableCell>
-                  <TableCell align="center">
-                    <div>
-                      <a style={{ textDecoration: 'none', color: 'Black', width: '80px', borderRadius: '10px', backgroundColor: '#dc3545', padding: '10px', paddingLeft: '30px', paddingRight: '30px' }} align="center" href="#">Delete</a>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-  }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </>
-    );
-//  }
-}
-
+            ))
+            }
+            {/* {allBranches.length === 0 && <TableCell align="center">No Data to Show</TableCell>} */}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  );
+  //  }
 }
 
 export default ManageBranch;

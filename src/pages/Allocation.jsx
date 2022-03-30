@@ -95,7 +95,8 @@ const Allocation = () => {
 
                 setToBePickedUp(pickups);
                 setToBeDelivered(delivers)
-            })
+            }
+            )
         }
 
         const getAllPerson = async () => {

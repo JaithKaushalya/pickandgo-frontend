@@ -8,16 +8,50 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
-import { Container, Grid, Card, CardContent, Button, TextField , Divider} from '@mui/material';
+import { Container, Grid, Card, CardContent, Button, TextField, Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Header from './header';
+import { useState } from 'react'
+import { addBranch } from '../util/apiCalls';
 
-class AddBranch extends Component {
 
-  render() {
-    return (
-     <>
-        <div>
+const AddBranch = () => {
+
+  const [city, setcity] = React.useState('');
+  const [district, setdistrict] = React.useState('');
+  const [telephone, setTelephone] = React.useState('');
+  const [showError, setShowError] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+
+  const handleAddBranch = async () => {
+
+    if (!city || !district || !telephone) {
+      setErrorMsg("Please fill all the fields");
+      setShowError(true);
+
+    } else {
+      const branch = {
+        city,
+        district,
+        telephone
+      };
+      const response = await addBranch(branch);
+
+      if (response.status !== 200) {
+        setErrorMsg(response.error);
+        setShowError(true);
+
+      } else {
+        setShowError(false);
+
+      }
+      window.location.reload();
+    }
+  };
+
+  return (
+      <div>
         <Header />
         <div><br />
           <Typography style={{ marginLeft: '20px', marginTop: '75px', marginBottom: '25px' }} variant="h4" gutterBottom component="div">
@@ -41,78 +75,73 @@ class AddBranch extends Component {
             Add Branch
           </Typography>
         </div>
-            <Container><br /><br />
-                <Card>
-                    <CardContent>
-                        <Grid container spacing={4}>
-                            <Grid item xs={6}>
-                                <Box
-                                    component="form"
-                                    sx={{
-                                        '& .MuiTextField-root': { m: 2, width: '100ch' },
-                                    }}
-                                    noValidate
-                                    autoComplete="off"
-                                    
-                                >
-                                    <br/><br/>
+        <Container><br /><br />
+          <Card>
+            <CardContent>
+              <Grid container spacing={4}>
+                <Grid item xs={6}>
+                  <Box
+                    component="form"
+                    sx={{
+                      '& .MuiTextField-root': { m: 2, width: '100ch' },
+                    }}
+                    noValidate
+                    autoComplete="off"
 
-                                    <div>
-                                      <label>Name</label>
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="Name"
-                                            defaultValue=""
-                                        />
-                                        <label>District</label>
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="District"
-                                            defaultValue=""
-                                        />
-                                        <label>Telephone</label>
-                                        <TextField
-                                            required
-                                            id="outlined-required"
-                                            label="Telephone"
-                                            defaultValue=""
-                                        />
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <Button variant="contained" color="info" sx={{ mr: 4 }}>Add Branch</Button>
+                  >
+                    <br /><br />
 
-
-                                    </div>
-
-                                </Box>
-
-
-
-                            </Grid>
-                        </Grid>
-
-                    </CardContent>
-                </Card>
-
-
-            </Container>
-        </div>
-     </>
-    );
+                    <div>
+                      <label>City</label>
+                      <TextField
+                        required
+                        id="outlined-required"
+                        label="City"
+                        defaultValue=""
+                        onChange={(e) => setcity(e.target.value)}
+                      />
+                      <label>District</label>
+                      <TextField
+                        required
+                        id="outlined-required"
+                        label="District"
+                        defaultValue=""
+                        onChange={(e) => setdistrict(e.target.value)}
+                      />
+                      <label>Telephone</label>
+                      <TextField
+                        required
+                        id="outlined-required"
+                        label="Telephone"
+                        defaultValue=""
+                        onChange={(e) => setTelephone(e.target.value)}
+                      />
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <Button 
+                      variant="contained" 
+                      color="info"
+                      onClick={handleAddBranch} 
+                      sx={{ mr: 4 }}>Add Branch</Button>
+                    </div>
+                  </Box>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Container>
+      </div>
+  );
   }
 
-}
-
-export default AddBranch;
+  export default AddBranch;
 
 
-const Form = styled.div`
+  const Form = styled.div`
   display: flex;
   flex-direction: row;
 `
 
-const Wrap = styled.div`
+  const Wrap = styled.div`
     color: white;
     cursor: pointer;
     padding: 15px;

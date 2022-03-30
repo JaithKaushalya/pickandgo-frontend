@@ -86,3 +86,112 @@ export const allocatePerson = async (allocation) => {
     }
 }
 
+export const loadAllBranches = async () => {
+
+    try {
+
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.get(`${Properties.baseUrl}/branch`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+       return { "data": res.data, "status": res.status }
+        // return res.data;;
+
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+
+export const loadAllVehicles = async () => {
+    
+        try {
+    
+            const token = sessionStorage.getItem("token");
+    
+            const res = await axios.get(`${Properties.baseUrl}/Vehicle/getAllVehicles`, {
+                headers: {
+                    'Authorization': `${token}`
+                },
+            });
+            return { "data": res.data, "status": res.status }
+    
+        } catch (error) {
+            return { "status": error.response.status, "error": error.response.data }
+        }
+    }
+
+export const addBranch = async (branch) => {
+
+    try {
+
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.post(`${Properties.baseUrl}/branch`, branch, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+
+export const deleteBranch = async (branchId) => {
+    
+        try {
+    
+            const token = sessionStorage.getItem("token");
+    
+            const res = await axios.delete(`${Properties.baseUrl}/branch/${branchId}`, {
+                headers: {
+                    'Authorization': `${token}`
+                },
+            });
+            return { "data": res.data, "status": res.status }
+    
+        } catch (error) {
+            return { "status": error.response.status, "error": error.response.data }
+        }
+    }
+
+export const loadDeliveries = async (branchId) => {
+    
+        try {
+    
+            const token = sessionStorage.getItem("token");
+    
+            const res = await axios.get(`${Properties.baseUrl}/delivery/GoodNotAssignedVehicle/${branchId}`, {
+                headers: {
+                    'Authorization': `${token}`
+                },
+            });
+            return { "data": res.data, "status": res.status }
+    
+        } catch (error) {
+            return { "status": error.response.status, "error": error.response.data }
+        }
+    }
+
+export const assignVehicle = async (vehicle) => {
+
+    try {
+
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.post(`${Properties.baseUrl}/delivery/AssignVehicle`, vehicle, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+
