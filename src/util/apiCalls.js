@@ -141,6 +141,24 @@ export const addBranch = async (branch) => {
     }
 }
 
+export const addVehicle = async (vehicle) => {
+
+    try {
+
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.post(`${Properties.baseUrl}/Vehicle`, vehicle, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+
 export const deleteBranch = async (branchId) => {
     
         try {
@@ -159,23 +177,37 @@ export const deleteBranch = async (branchId) => {
         }
     }
 
+export const deleteVehicle = async (vehicleId) => {
+
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.delete(`${Properties.baseUrl}/Vehicle/${vehicleId}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+
 export const loadDeliveries = async (branchId) => {
     
-        try {
-    
-            const token = sessionStorage.getItem("token");
-    
-            const res = await axios.get(`${Properties.baseUrl}/delivery/GoodNotAssignedVehicle/${branchId}`, {
-                headers: {
-                    'Authorization': `${token}`
-                },
-            });
-            return { "data": res.data, "status": res.status }
-    
-        } catch (error) {
-            return { "status": error.response.status, "error": error.response.data }
-        }
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.get(`${Properties.baseUrl}/delivery/GoodNotAssignedVehicle/${branchId}`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
     }
+}
 
 export const assignVehicle = async (vehicle) => {
 
@@ -194,4 +226,5 @@ export const assignVehicle = async (vehicle) => {
         return { "status": error.response.status, "error": error.response.data }
     }
 }
+
 

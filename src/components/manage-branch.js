@@ -135,24 +135,34 @@ const ManageBranch = () => {
       const branches = [];
 
       const response = await loadAllBranches();
-     
-      if (response.data !== true) {
-        // alert("Allocation successful.");
-        // window.location.reload();
 
-        response.data.forEach(branch => {
+      if (response.status === 200) {
+        response.data.map(branch => {
           branches.push(branch);
-          setAllBranches(branches);
-        });
-
-      } else {
-        alert("Allocation Failed.");
-        // sessionStorage.setItem("user", JSON.stringify(res.data.userData));
-        // sessionStorage.setItem("token", res.data.token);
-
+        })
       }
 
-      console.log(branches);
+      setAllBranches(branches);
+    }
+
+     
+      // if (response.data !== true) {
+      //   // alert("Allocation successful.");
+      //   // window.location.reload();
+
+      //   response.data.forEach(branch => {
+      //     branches.push(branch);
+      //     setAllBranches(branch);
+      //   });
+
+      // } else {
+      //   alert("Allocation Failed.");
+      //   // sessionStorage.setItem("user", JSON.stringify(res.data.userData));
+      //   // sessionStorage.setItem("token", res.data.token);
+
+      // }
+
+      // console.log(branches);
 
       // response.data.forEach(branch => {
       //   branches.push(branch)
@@ -161,24 +171,38 @@ const ManageBranch = () => {
       //   setAllBranches(branches);
       // }
       // )
-    }
+    // }
 
     const deleteBranch = async (branchId) => {
       const response = await deleteBranch(branchId);
-      if (response.data !== true) {
-        alert("Deletion successful.");
-        // window.location.reload();
+
+      if (response.data === true) {
+        alert("Branch Deleted Successfully");
 
       } else {
-        alert("Deletion Failed.");
+        alert("Branch Deletion Failed");
       }
+      
       window.location.reload();
     }
+
+
+      // if (response.data !== true) {
+      //   alert("Deletion successful.");
+      //   // window.location.reload();
+
+      // } else {
+      //   alert("Deletion Failed.");
+      // }
+      // window.location.reload();
+    // }
 
 
     getAllBranches();
 
   }, []);
+  
+  console.log("-->", allBranches);
 
   return (
     <>
@@ -192,12 +216,12 @@ const ManageBranch = () => {
       <Container>
         <Wrap>
           <div>
-            <a style={{ textDecoration: 'none', color: 'white' }} href="#">Manage Branch</a>
+            <a style={{ textDecoration: 'none', color: 'white' }} href="manage-branch">Manage Branch</a>
           </div>
         </Wrap>
         <Wrap>
           <div>
-            <a style={{ textDecoration: 'none', color: 'white' }} href="#">Add Branch</a>
+            <a style={{ textDecoration: 'none', color: 'white' }} href="addBranch">Add Branch</a>
           </div>
         </Wrap>
       </Container>
@@ -232,7 +256,7 @@ const ManageBranch = () => {
                       variant="contained" 
                       color="info"
                       align="center"
-                      // onClick={deleteBranch()} 
+                      onClick={() => deleteBranch(branch.branchId)}
                       sx={{ mr: 4 }}>Delete</Button>
                   {/* <div>
                     <a style={{ textDecoration: 'none', color: 'Black', width: '80px', borderRadius: '10px', backgroundColor: '#dc3545', padding: '10px', paddingLeft: '30px', paddingRight: '30px' }} align="center" href="#">Delete</a>

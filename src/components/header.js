@@ -16,8 +16,8 @@ import PropTypes from 'prop-types';
 
 import profilePic from "../assets/images/profile.jpg";
 
-const pages = ['Home', 'Track Delivery', 'All Requests', 'Manage Users', 'Allocation'];
-const pageRouteLinks = ['/home', '/track-Delivery', '/all-requests', '/manage-users', "/allocation"];
+const pages = ['Home', 'Track Delivery', 'All Requests', 'Manage Users', 'Manage Branch', 'Manage Vehicle', 'Assign Vehicle', 'History', 'Allocation'];
+const pageRouteLinks = ['/home', '/track-Delivery', '/all-requests', '/manage-users', '/manage-branch', '/manage-vehicle', '/assignVehicle', '/viewHistory', "/allocation"];
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 

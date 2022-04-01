@@ -56,6 +56,7 @@ const ManageVehicle = () => {
     const [branch, setBranch] = React.useState([]);
     const [vehicle, setVehicle] = React.useState([]);
     const [delivery, setDelivery] = React.useState([]);
+    const [pickup_branch_branch_id, set_pickup_branch_branch_id] = React.useState([]);
 
     React.useEffect(() => {
 
@@ -65,40 +66,39 @@ const ManageVehicle = () => {
 
             const response = await loadAllVehicles();
 
-            if (response.data !== true) {
-                // const data = response.data;
-                alert("Vehicles Loaded");
-                // console.log(vehicles);
-                // window.location.reload();
+            if (response.status === 200) {
 
-                response.data.forEach(vehicle => {
-                    vehicles.push(vehicle)
-                    setAllVehicles(vehicles);
-                }
-                );
+                response.data.forEach(element => {
 
-            } else {
-                alert("Vehicles Not Loaded");
+                    vehicles.push(element);
+                });
+
+                setVehicle(vehicles);
+            }
+
+            else {
+                alert("No Vehicles Available");
             }
 
             console.log(vehicles);
 
         }
 
-        const getAllDeliveries = async () => {
+        const getAllDeliveries = async (branchId) => {
+            
             const deliveries = [];
 
-            const response = await loadDeliveries();
+            const response = await loadDeliveries(branchId);
 
             if (response.data !== true) {
                 // const data = response.data;
                 alert("Deliveries Available");
 
-                // response.data.forEach(delivery => {
-                //     deliveries.push(delivery);
-                //     setAllDeliveries(deliveries);
-                // }
-                // );
+                response.data.forEach(delivery => {
+                    deliveries.push(delivery);
+                    setAllDeliveries(deliveries);
+                }
+                );
 
             }
             else {
@@ -110,12 +110,14 @@ const ManageVehicle = () => {
         }
 
 
-        getAllDeliveries();
+        getAllDeliveries(1);
         getAllVehicles();
 
     }, []);
 
+    // POST Implementation
     const assignVehicles = async () => {
+
         if (delivery.length === 0 || vehicle.length === 0) {
             alert("Please select a delivery and a vehicle");
         }
@@ -160,7 +162,7 @@ const ManageVehicle = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {allVehicles.map((vehicle) => (
+                        {vehicle.map((vehicle) => (
                             <TableRow key={vehicle.vehicleId}>
                                 <TableCell align="center" component="th" scope="row">
                                     {vehicle.vehicleId}
@@ -178,7 +180,7 @@ const ManageVehicle = () => {
                                 <TableCell align="center">
                                     <InputLabel>Vehicle No</InputLabel>
                                     <Select style={{width:"150px", height: "30px"}}>
-                                        <MenuItem value={vehicle.vehicleId}>{vehicle.vehicleId}</MenuItem>
+                                        <MenuItem value={vehicle}>{vehicle}</MenuItem>
                                     </Select>
                                 </TableCell>
                                 <TableCell align="center">

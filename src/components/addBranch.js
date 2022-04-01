@@ -61,12 +61,12 @@ const AddBranch = () => {
         <Form>
           <Wrap>
             <div>
-              <a style={{ textDecoration: 'none', color: 'white' }} href="#">Manage Branch</a>
+              <a style={{ textDecoration: 'none', color: 'white' }} href="manage-branch">Manage Branch</a>
             </div>
           </Wrap>
           <Wrap>
             <div>
-              <a style={{ textDecoration: 'none', color: 'white' }} href="#">Add Branch</a>
+              <a style={{ textDecoration: 'none', color: 'white' }} href="addBranch">Add Branch</a>
             </div>
           </Wrap>
         </Form>
