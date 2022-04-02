@@ -43,6 +43,8 @@ const VehicleManagement = () => {
                 alert(response.error);
             }
 
+            console.log(vehicles);
+
 
         }
 
@@ -62,6 +64,7 @@ const VehicleManagement = () => {
         }
 
         getAllVehicles();
+
 
 
     }, []);
@@ -116,7 +119,7 @@ const VehicleManagement = () => {
                                         variant="contained"
                                         color="info"
                                         align="center"
-                                        onClick={() => deleteVehicle()}
+                                        onClick = {() => deleteVehicle(vhl.vehicleId)}
                                         sx={{ mr: 4 }}>Delete</Button>
                                     {/* <div>
                             <a style={{ textDecoration: 'none', color: 'Black', width: '80px', borderRadius: '10px', backgroundColor: '#dc3545', padding: '10px', paddingLeft: '30px', paddingRight: '30px' }} align="center" href="#">Delete</a>

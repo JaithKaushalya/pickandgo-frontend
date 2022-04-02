@@ -22,48 +22,114 @@ const rows = [
   createData(5, "Peradeniya", "Hatton", "Rs.5000/-"),
 ];
 
-class ViewHistory extends Component {
+const ViewHistory = () => {
 
-  render() {
-    return (
-      <>
-        <div>
-        <Header />
-        <br />
-          <Typography style={{ fontWeight: '900', marginTop: '100px', marginBottom: '25px' }} align="center" variant="h4" gutterBottom component="div">
-            Delivery History
-          </Typography>
-        </div>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery ID</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Destination From</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Destination To</TableCell>
-                <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Payment</TableCell>
+  const [allHistory, setAllHistory] = React.useState([]);
+
+
+  React.useEffect(() => {
+
+    const getAllHistory = async () => {
+      const histories = [];
+
+      const response = await getBranchHistory();
+
+      response.data.forEach(history => {
+        if (delivery.trackdelivery.deliver === 1) {
+          histories.push(history);
+        }
+
+        setAllHistory(histories);
+
+      });
+
+    }
+
+    console.log(histories);
+    getAllHistory();
+
+  }, []);
+
+
+  return (
+    <div>
+      <Header />
+      <Typography style={{ fontWeight: '900', marginTop: '150px', marginBottom: '25px' }} align="center" variant="h4" gutterBottom component="div">
+        Delivery History
+      </Typography>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery ID</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Pickup Langitude</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Pickup Longitude</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery Langitude</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery Longitude</TableCell>
+              <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Payment</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow
+                key={row.name}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell align="center">{row.deliveryID}</TableCell>
+                <TableCell align="center">{row.dfrom}</TableCell>
+                <TableCell align="center">{row.dto}</TableCell>
+                <TableCell align="center">{row.dfrom}</TableCell>
+                <TableCell align="center">{row.dto}</TableCell>
+                <TableCell align="center">{row.payment}</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell align="center">{row.deliveryID}</TableCell>
-                  <TableCell align="center">{row.dfrom}</TableCell>
-                  <TableCell align="center">{row.dto}</TableCell>
-                  <TableCell align="center">{row.payment}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </>
-    );
-  }
-
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
+  );
 }
+
+// return (
+//   <>
+//     <div>
+//     <Header />
+//     <br />
+//       <Typography style={{ fontWeight: '900', marginTop: '100px', marginBottom: '25px' }} align="center" variant="h4" gutterBottom component="div">
+//         Delivery History
+//       </Typography>
+//     </div>
+//     <TableContainer component={Paper}>
+//       <Table sx={{ minWidth: 650 }} aria-label="simple table">
+//         <TableHead>
+//           <TableRow>
+//             <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery ID</TableCell>
+//             <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Pickup Langitude</TableCell>
+//             <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Pickup Longitude</TableCell>
+//             <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery Langitude</TableCell>
+//             <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Delivery Longitude</TableCell>
+//             <TableCell style={{ fontWeight: '900', fontSize: 18 }} align="center">Payment</TableCell>
+//           </TableRow>
+//         </TableHead>
+//         <TableBody>
+//           {rows.map((row) => (
+//             <TableRow
+//               key={row.name}
+//               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+//             >
+//               <TableCell align="center">{row.deliveryID}</TableCell>
+//               <TableCell align="center">{row.dfrom}</TableCell>
+//               <TableCell align="center">{row.dto}</TableCell>
+//               <TableCell align="center">{row.dfrom}</TableCell>
+//               <TableCell align="center">{row.dto}</TableCell>
+//               <TableCell align="center">{row.payment}</TableCell>
+//             </TableRow>
+//           ))}
+//         </TableBody>
+//       </Table>
+//     </TableContainer>
+//   </>
+// );
 
 export default ViewHistory;
 

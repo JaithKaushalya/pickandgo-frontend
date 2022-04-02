@@ -227,4 +227,21 @@ export const assignVehicle = async (vehicle) => {
     }
 }
 
+export const getBranchHistory = async () => {   
+    
+    try {
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.get(`${Properties.baseUrl}/delivery/DeliveryHistory`, {
+            headers: {
+                'Authorization': `${token}`
+            },
+        });
+        return { "data": res.data, "status": res.status }
+    } catch (error) {
+        return { "status": error.response.status, "error": error.response.data }
+    }
+}
+    
+
 

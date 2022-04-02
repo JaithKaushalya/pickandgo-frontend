@@ -19,6 +19,7 @@ const AddVehicle = () => {
 
     const [type, setType] = useState('');
     const [vehicleNo, setVehicleNo] = useState('');
+    const [status, setStatus] = useState('');
     const [showError, setShowError] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
 
@@ -31,7 +32,8 @@ const AddVehicle = () => {
         else {
             const vehicle = {
                 type,
-                vehicleNo
+                vehicleNo,
+                status
             };
             const response = await addVehicle(vehicle);
 
@@ -43,6 +45,8 @@ const AddVehicle = () => {
                 setShowError(false);
 
             }
+
+            
             window.location.reload();
         }
     };
